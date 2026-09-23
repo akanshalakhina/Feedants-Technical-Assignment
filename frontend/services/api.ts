@@ -130,5 +130,18 @@ export const api = {
       request<{ isRegistered: boolean; registration: Registration | null }>(
         `/competitions/${id}/registration-status`
       ),
+
+    simulateBooking: (id: string) =>
+      request<{ message: string; competition: Competition }>(
+        `/competitions/${id}/simulate-booking`,
+        { method: 'POST' }
+      ),
+
+    resetSpots: (id: string) =>
+      request<{ message: string; competition: Competition }>(
+        `/competitions/${id}/reset-spots`,
+        { method: 'POST' }
+      ),
   },
 };
+

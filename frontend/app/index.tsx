@@ -85,18 +85,34 @@ export default function HomeScreen() {
 
 function CompetitionCard({ item, onPress }: { item: Competition; onPress: () => void }) {
   const remaining = item.totalSpots - item.bookedSpots;
+  const isFull = remaining <= 0;
+
+  const getStatusBadge = () => {
+    if (isFull) return { label: 'Full', bg: '#FEE2E2', color: '#DC2626' };
+    if (item.status === 'submission_open') return { label: 'Submissions Open', bg: '#EFF6FF', color: '#2563EB' };
+    if (item.status === 'judging') return { label: 'In Judging', bg: '#FEF3C7', color: '#D97706' };
+    return { label: 'Registration Open', bg: '#E8F5F4', color: '#16A093' };
+  };
+
+  const statusBadge = getStatusBadge();
+
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.85}>
       <View style={styles.cardTop}>
         <Text style={styles.cardTitle}>{item.title}</Text>
-        <View style={styles.categoryBadge}>
-          <Text style={styles.categoryText}>{item.category}</Text>
+        <View style={{ flexDirection: 'row', gap: 6 }}>
+          <View style={[styles.statusPill, { backgroundColor: statusBadge.bg }]}>
+            <Text style={[styles.statusPillText, { color: statusBadge.color }]}>{statusBadge.label}</Text>
+          </View>
+          <View style={styles.categoryBadge}>
+            <Text style={styles.categoryText}>{item.category}</Text>
+          </View>
         </View>
       </View>
       <View style={styles.cardStats}>
         <Stat label="Prize Pool" value={`₹ ${item.prizePool.toLocaleString('en-IN')}`} teal />
         <Stat label="Entry Fee"  value={`₹ ${item.entryFee}`} />
-        <Stat label="Spots Left" value={remaining > 0 ? String(remaining) : 'Full'} urgent={remaining <= 5} />
+        <Stat label="Spots Left" value={isFull ? '0 (Full)' : String(remaining)} urgent={remaining <= 5} />
       </View>
     </TouchableOpacity>
   );
@@ -132,8 +148,10 @@ const styles = StyleSheet.create({
   },
   cardTop:     { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 },
   cardTitle:   { fontSize: 15, fontWeight: '800', color: '#1A1A1A', flex: 1, marginRight: 8 },
-  categoryBadge:{ backgroundColor: '#E8F5F4', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
-  categoryText:{ fontSize: 11, color: '#16A093', fontWeight: '700' },
+  categoryBadge:{ backgroundColor: '#F1F5F9', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
+  categoryText:{ fontSize: 11, color: '#475569', fontWeight: '700' },
+  statusPill:  { borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
+  statusPillText: { fontSize: 11, fontWeight: '700' },
   cardStats:   { flexDirection: 'row', justifyContent: 'space-between' },
   statLabel:   { fontSize: 11, color: '#999', marginBottom: 3 },
   statValue:   { fontSize: 15, fontWeight: '800', color: '#1A1A1A' },

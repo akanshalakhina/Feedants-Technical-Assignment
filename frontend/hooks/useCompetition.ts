@@ -17,9 +17,9 @@ export function useCompetition(id: string): CompetitionState {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (silent = false) => {
     if (!id) return;
-    setIsLoading(true);
+    if (!silent) setIsLoading(true);
     setError(null);
     try {
       const data = await api.competitions.get(id);
@@ -27,15 +27,22 @@ export function useCompetition(id: string): CompetitionState {
       setIsRegistered(data.isRegistered);
       setRegistration(data.registration);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to load competition');
+      if (!silent) {
+        setError(err instanceof Error ? err.message : 'Failed to load competition');
+      }
     } finally {
-      setIsLoading(false);
+      if (!silent) setIsLoading(false);
     }
   }, [id]);
 
   useEffect(() => {
-    fetchData();
+    fetchData(false);
+    // Poll every 3 seconds for real-time spot updates & status changes
+    const timer = setInterval(() => {
+      fetchData(true);
+    }, 3000);
+    return () => clearInterval(timer);
   }, [fetchData]);
 
-  return { competition, isRegistered, registration, isLoading, error, refetch: fetchData };
+  return { competition, isRegistered, registration, isLoading, error, refetch: () => fetchData(false) };
 }

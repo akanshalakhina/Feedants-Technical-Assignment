@@ -161,3 +161,74 @@ exports.getRegistrationStatus = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
+
+// ─── POST /api/competitions/:id/simulate-booking ──────────────────────────────
+/**
+ * Utility endpoint for demo & recording purposes:
+ * Simulates a concurrent participant booking a spot atomically.
+ */
+exports.simulateBooking = async (req, res) => {
+  try {
+    const { id: competitionId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(competitionId)) {
+      return res.status(400).json({ message: 'Invalid competition ID' });
+    }
+
+    const competition = await Competition.findOneAndUpdate(
+      {
+        _id: competitionId,
+        $expr: { $lt: ['$bookedSpots', '$totalSpots'] },
+        registrationCloseDate: { $gt: new Date() },
+      },
+      { $inc: { bookedSpots: 1 } },
+      { new: true }
+    ).lean({ virtuals: true });
+
+    if (!competition) {
+      const comp = await Competition.findById(competitionId);
+      if (!comp) return res.status(404).json({ message: 'Competition not found' });
+      if (comp.bookedSpots >= comp.totalSpots)
+        return res.status(409).json({ message: 'Competition is fully booked' });
+      return res.status(409).json({ message: 'Registration is closed' });
+    }
+
+    const simEmail = `participant_${Date.now()}@feedants.demo`;
+    const simUser = await require('../models/User').create({
+      name: `User ${competition.bookedSpots}`,
+      email: simEmail,
+      passwordHash: 'demo_sim_hash',
+    });
+
+    await Registration.create({
+      userId: simUser._id,
+      competitionId,
+      paymentStatus: 'paid',
+    });
+
+    res.json({
+      message: `⚡ Live booking successful! User ${competition.bookedSpots} booked a spot.`,
+      competition,
+    });
+  } catch (err) {
+    console.error('simulateBooking error:', err);
+    res.status(500).json({ message: 'Simulation failed', error: err.message });
+  }
+};
+
+// ─── POST /api/competitions/:id/reset-spots ────────────────────────────────────
+exports.resetSpots = async (req, res) => {
+  try {
+    const { id: competitionId } = req.params;
+    const competition = await Competition.findByIdAndUpdate(
+      competitionId,
+      { bookedSpots: 1 },
+      { new: true }
+    ).lean({ virtuals: true });
+
+    res.json({ message: 'Spots reset to initial seed state (1 booked / 19 left)', competition });
+  } catch (err) {
+    res.status(500).json({ message: 'Reset failed', error: err.message });
+  }
+};
+
+

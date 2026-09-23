@@ -81,12 +81,48 @@ export default function CompetitionDetailScreen() {
   const [registering, setRegistering] = useState(false);
   const [language, setLanguage] = useState<Language>('en');
 
+  // Interactive live simulation and video preview states
+  const [simulating, setSimulating] = useState(false);
+  const [simulationToast, setSimulationToast] = useState<string | null>(null);
+  const [videoModal, setVideoModal] = useState<{
+    visible: boolean;
+    title: string;
+    subtitle: string;
+  }>({ visible: false, title: '', subtitle: '' });
+
   useEffect(() => {
     setIsRegistered(apiIsRegistered);
     setLocalRegistration(registration);
   }, [apiIsRegistered, registration]);
 
   // ── Handlers ───────────────────────────────────────────────────────────────
+
+  const handleSimulateBooking = useCallback(async () => {
+    if (!competition) return;
+    setSimulating(true);
+    try {
+      const res = await api.competitions.simulateBooking(competition._id);
+      setSimulationToast(res.message);
+      refetch();
+      setTimeout(() => setSimulationToast(null), 4000);
+    } catch (e: unknown) {
+      Alert.alert('Simulation Error', e instanceof Error ? e.message : 'Booking failed');
+    } finally {
+      setSimulating(false);
+    }
+  }, [competition, refetch]);
+
+  const handleResetSpots = useCallback(async () => {
+    if (!competition) return;
+    try {
+      const res = await api.competitions.resetSpots(competition._id);
+      refetch();
+      setSimulationToast(res.message);
+      setTimeout(() => setSimulationToast(null), 3000);
+    } catch (e: unknown) {
+      Alert.alert('Reset Error', e instanceof Error ? e.message : 'Reset failed');
+    }
+  }, [competition, refetch]);
 
   const handleRegister = useCallback(async () => {
     if (!competition) return;
@@ -108,6 +144,7 @@ export default function CompetitionDetailScreen() {
     if (!competition) return;
     Alert.prompt(
       'Upload Submission',
+
       'Paste your video URL (YouTube, Drive, etc.)',
       [
         { text: 'Cancel', style: 'cancel' },
@@ -272,13 +309,44 @@ export default function CompetitionDetailScreen() {
             </View>
             <SpotsProgress totalSpots={competition.totalSpots} bookedSpots={competition.bookedSpots} />
           </View>
+
+          {/* ── Live Concurrency & Spot Booking Simulation (For Demo / Recording) ── */}
+          <View style={styles.simBar}>
+            <TouchableOpacity
+              style={styles.simBtn}
+              onPress={handleSimulateBooking}
+              disabled={simulating}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.simBtnText}>
+                {simulating ? '⏳ Booking...' : '⚡ Simulate Live Spot Booking'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.resetBtn}
+              onPress={handleResetSpots}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.resetBtnText}>🔄 Reset</Text>
+            </TouchableOpacity>
+          </View>
+
+          {simulationToast && (
+            <View style={styles.toastBox}>
+              <Text style={styles.toastText}>{simulationToast}</Text>
+            </View>
+          )}
         </View>
 
         {/* Judge */}
         <JudgeCard
           judge={competition.judge}
           onVideoPress={() =>
-            Alert.alert('Intro Video', `Opening intro video for ${competition.judge.name}…`)
+            setVideoModal({
+              visible: true,
+              title: `${competition.judge.name}'s Introduction`,
+              subtitle: `${competition.judge.title} • ${competition.judge.experience}`,
+            })
           }
         />
 
@@ -299,7 +367,13 @@ export default function CompetitionDetailScreen() {
         {/* Previous winners */}
         <PreviousWinners
           winners={competition.previousWinners}
-          onVideoPress={(w) => Alert.alert('🎬 Video', `Opening ${w.name}'s winning video…`)}
+          onVideoPress={(w) =>
+            setVideoModal({
+              visible: true,
+              title: `${w.name} (${w.rank} Place)`,
+              subtitle: `Performance Reel from previous Feedants competition`,
+            })
+          }
         />
 
         {/* About / Judging / Rules tabs */}
@@ -414,6 +488,44 @@ export default function CompetitionDetailScreen() {
           onPress={() => !user && router.push('/login')}
         />
       </View>
+
+      {/* ── Video / Media Preview Modal ────────────────────────────────────── */}
+      {videoModal.visible && (
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle} numberOfLines={1}>{videoModal.title}</Text>
+              <TouchableOpacity
+                onPress={() => setVideoModal({ visible: false, title: '', subtitle: '' })}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <Text style={styles.modalClose}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.modalSub}>{videoModal.subtitle}</Text>
+
+            {/* Simulated interactive video player frame */}
+            <View style={styles.videoPlayerFrame}>
+              <View style={styles.playPulseCircle}>
+                <Text style={styles.videoPlayerIcon}>▶</Text>
+              </View>
+              <Text style={styles.videoPlayerText}>Streaming HD Performance Reel</Text>
+              <Text style={styles.videoStreamDuration}>01:42 / 03:30</Text>
+              <View style={styles.progressBar}>
+                <View style={styles.progressFill} />
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={styles.modalDoneBtn}
+              onPress={() => setVideoModal({ visible: false, title: '', subtitle: '' })}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.modalDoneText}>Close Preview</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
 
     </SafeAreaView>
   );
@@ -598,4 +710,165 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.45, shadowRadius: 8,
   },
   navCenterIcon: { fontSize: 28, color: '#FFF', lineHeight: 32 },
+  
+  // ── Live Simulation & Toast
+  simBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 12,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+  },
+  simBtn: {
+    flex: 1,
+    backgroundColor: '#0F766E',
+    borderRadius: 8,
+    paddingVertical: 7,
+    alignItems: 'center',
+    shadowColor: '#0F766E',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  simBtnText: {
+    color: '#FFF',
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 0.2,
+  },
+  resetBtn: {
+    backgroundColor: '#F1F5F9',
+    borderRadius: 8,
+    paddingVertical: 7,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#CBD5E1',
+  },
+  resetBtnText: {
+    color: '#475569',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  toastBox: {
+    backgroundColor: '#ECFDF5',
+    borderColor: '#6EE7B7',
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 8,
+    marginTop: 8,
+    alignItems: 'center',
+  },
+  toastText: {
+    fontSize: 11,
+    color: '#065F46',
+    fontWeight: '700',
+  },
+
+  // ── Video Preview Modal
+  modalOverlay: {
+    position: 'absolute',
+    top: 0, bottom: 0, left: 0, right: 0,
+    backgroundColor: 'rgba(15, 23, 42, 0.75)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    zIndex: 9999,
+  },
+  modalCard: {
+    width: '100%',
+    maxWidth: 400,
+    backgroundColor: '#FFF',
+    borderRadius: 18,
+    padding: 18,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.35,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#0F172A',
+    flex: 1,
+    marginRight: 8,
+  },
+  modalClose: {
+    fontSize: 18,
+    color: '#64748B',
+    fontWeight: '700',
+  },
+  modalSub: {
+    fontSize: 12,
+    color: '#64748B',
+    marginTop: 4,
+    marginBottom: 14,
+  },
+  videoPlayerFrame: {
+    height: 190,
+    backgroundColor: '#0F172A',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  playPulseCircle: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: 'rgba(56, 189, 248, 0.25)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+    borderWidth: 2,
+    borderColor: '#38BDF8',
+  },
+  videoPlayerIcon: {
+    fontSize: 22,
+    color: '#38BDF8',
+    marginLeft: 3,
+  },
+  videoPlayerText: {
+    fontSize: 13,
+    color: '#F8FAFC',
+    fontWeight: '700',
+  },
+  videoStreamDuration: {
+    fontSize: 11,
+    color: '#94A3B8',
+    marginTop: 4,
+  },
+  progressBar: {
+    position: 'absolute',
+    bottom: 0, left: 0, right: 0,
+    height: 5,
+    backgroundColor: '#334155',
+  },
+  progressFill: {
+    width: '58%',
+    height: '100%',
+    backgroundColor: TEAL,
+  },
+  modalDoneBtn: {
+    backgroundColor: TEAL,
+    borderRadius: 10,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  modalDoneText: {
+    color: '#FFF',
+    fontSize: 14,
+    fontWeight: '800',
+  },
 });
