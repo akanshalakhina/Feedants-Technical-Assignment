@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "Feedants",
+    "slug": "feedants",
+    "version": "1.0.0",
+    "scheme": "feedants",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.feedants.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#16A093"
+      },
+      "package": "com.feedants.app"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-asset"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
