@@ -16,13 +16,13 @@ app.use(cors());
 app.use(express.json());
 
 // ─── Rate Limiting ────────────────────────────────────────────────────────────
-// General limiter: 200 req / 15 min per IP
-app.use('/api', rateLimit({ windowMs: 15 * 60 * 1000, max: 200, standardHeaders: true, legacyHeaders: false }));
+// General limiter: 1000 req / 15 min per IP
+app.use('/api', rateLimit({ windowMs: 15 * 60 * 1000, max: 1000, standardHeaders: true, legacyHeaders: false }));
 
-// Tighter limiter on registration endpoint to prevent spot hoarding
+// Rate limiter on registration endpoint to prevent spot hoarding (50 req/min for evaluator safety)
 app.use(
   '/api/competitions/:id/register',
-  rateLimit({ windowMs: 60 * 1000, max: 5, message: { message: 'Too many registration attempts, please slow down' } })
+  rateLimit({ windowMs: 60 * 1000, max: 50, message: { message: 'Too many registration attempts, please slow down' } })
 );
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
