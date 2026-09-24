@@ -17,9 +17,19 @@ const { auth, optionalAuth } = require('../middleware/auth');
 // Public – list all non-draft competitions
 router.get('/', listCompetitions);
 
-// Demo utility routes (for screen recording & concurrency showcases)
-router.post('/:id/simulate-booking', simulateBooking);
-router.post('/:id/reset-spots', resetSpots);
+// Protection guard: disable demo/simulation routes in production unless explicitly allowed
+const devOnly = (_req, res, next) => {
+  if (process.env.NODE_ENV === 'production' && !process.env.ALLOW_DEMO_ENDPOINTS) {
+    return res.status(403).json({
+      message: 'Forbidden: Development and demo endpoints are disabled in production environment',
+    });
+  }
+  next();
+};
+
+// Utility routes (strictly guarded in production)
+router.post('/:id/simulate-booking', devOnly, simulateBooking);
+router.post('/:id/reset-spots', devOnly, resetSpots);
 
 // Public endpoints
 router.get('/:id', optionalAuth, getCompetition);

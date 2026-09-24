@@ -7,42 +7,47 @@ interface Props {
   onVideoPress?: (winner: PreviousWinner) => void;
 }
 
+const LOCAL_WINNER_IMAGES = [
+  require('../assets/images/winner_riya.png'),
+  require('../assets/images/winner_aarav.png'),
+  require('../assets/images/winner_neha.png'),
+  require('../assets/images/winner_ishita.png'),
+];
+
 export function PreviousWinners({ winners, onVideoPress }: Props) {
   if (!winners.length) return null;
 
   return (
-    <View style={styles.section}>
+    <View style={styles.card}>
       <Text style={styles.title}>Previous Winners</Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scroll}
       >
-        {winners.map((winner, i) => (
-          <TouchableOpacity
-            key={i}
-            style={styles.card}
-            onPress={() => onVideoPress?.(winner)}
-            activeOpacity={0.8}
-          >
-            <View style={styles.thumbWrap}>
-              <Image source={{ uri: winner.videoThumbnailUrl }} style={styles.thumb} />
-              <View style={styles.overlay}>
-                <View style={styles.playBtn}>
-                  <Text style={styles.playIcon}>▶</Text>
-                </View>
+        {winners.map((winner, i) => {
+          const imgSource = LOCAL_WINNER_IMAGES[i] || { uri: winner.videoThumbnailUrl };
+          return (
+            <TouchableOpacity
+              key={i}
+              style={styles.winnerCard}
+              onPress={() => onVideoPress?.(winner)}
+              activeOpacity={0.8}
+            >
+              <View style={styles.thumbWrap}>
+                <Image source={imgSource} style={styles.thumb} />
               </View>
-            </View>
-            <View style={styles.infoCol}>
-              <Text style={styles.name} numberOfLines={1}>
-                {winner.name}
-              </Text>
-              <Text style={styles.rank}>
-                {winner.rank} Winner
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+              <View style={styles.infoCol}>
+                <Text style={styles.name} numberOfLines={1}>
+                  {winner.name}
+                </Text>
+                <Text style={styles.rank}>
+                  {winner.rank} Winner
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
     </View>
   );
@@ -51,34 +56,40 @@ export function PreviousWinners({ winners, onVideoPress }: Props) {
 const TEAL = '#00796B';
 
 const styles = StyleSheet.create({
-  section: {
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#ECEEF0',
+    padding: 14,
+    marginHorizontal: 12,
     marginVertical: 4,
   },
   title: {
-    fontSize: 13,
+    fontSize: 13.5,
     fontWeight: '800',
-    color: '#111827',
-    marginHorizontal: 12,
-    marginBottom: 6,
+    color: '#0B1E3B',
+    marginBottom: 10,
+    letterSpacing: -0.2,
   },
   scroll: {
-    paddingHorizontal: 12,
     gap: 8,
+    paddingRight: 4,
   },
-  card: {
+  winnerCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F8FAFC',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ECEEF0',
+    borderColor: '#ECEEF2',
     padding: 4,
-    paddingRight: 10,
-    gap: 8,
+    paddingRight: 12,
+    gap: 10,
   },
   thumbWrap: {
-    width: 48,
-    height: 48,
+    width: 54,
+    height: 54,
     borderRadius: 8,
     overflow: 'hidden',
     backgroundColor: '#F3F4F6',
@@ -87,36 +98,13 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.22)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  playBtn: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: 'rgba(255,255,255,0.92)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  playIcon: {
-    fontSize: 9,
-    color: TEAL,
-    marginLeft: 2,
-  },
   infoCol: {
     justifyContent: 'center',
   },
   name: {
-    fontSize: 12,
+    fontSize: 12.5,
     fontWeight: '800',
-    color: '#111827',
+    color: '#0B1E3B',
   },
   rank: {
     fontSize: 11,

@@ -40,7 +40,7 @@ export function BottomCTA({ cta, registering, onPress }: Props) {
   );
 }
 
-const TEAL = '#005953';
+const TEAL = '#00796B';
 
 const styles = StyleSheet.create({
   ctaWrap: {
@@ -49,19 +49,25 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingHorizontal: 12,
-    paddingVertical: 6,
-    backgroundColor: '#F8F9FA',
+    paddingVertical: 4,
     zIndex: 10,
   },
   ctaBtn: {
     backgroundColor: TEAL,
-    borderRadius: 8,
-    paddingVertical: 8,
+    borderRadius: 10,
+    height: 48,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
   },
   ctaBtnDisabled: {
     backgroundColor: '#9CA3AF',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   contentCol: {
     alignItems: 'center',
@@ -69,14 +75,15 @@ const styles = StyleSheet.create({
   },
   ctaText: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: 14.5,
     fontWeight: '800',
-    letterSpacing: 0.1,
+    letterSpacing: -0.1,
   },
   ctaSubText: {
-    color: '#D1FAF5',
-    fontSize: 10,
-    fontWeight: '600',
+    color: '#FFFFFF',
+    fontSize: 10.5,
+    fontWeight: '500',
+    opacity: 0.9,
     marginTop: 1,
   },
 });

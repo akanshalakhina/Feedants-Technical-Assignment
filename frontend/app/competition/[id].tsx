@@ -28,6 +28,8 @@ import { PaymentAndReferral } from '../../components/PaymentAndReferral';
 import { ReviewsSection } from '../../components/ReviewsSection';
 import { BottomCTA, CTAState } from '../../components/BottomCTA';
 import { BottomNavigation } from '../../components/BottomNavigation';
+import { MegaphoneIcon } from '../../components/Icons';
+import { SubmissionModal } from '../../components/SubmissionModal';
 
 // ─── CTA Lifecycle Business Logic ─────────────────────────────────────────────
 
@@ -87,10 +89,7 @@ export default function CompetitionDetailScreen() {
   const [localRegistration, setLocalRegistration] = useState<Registration | null>(null);
   const [registering, setRegistering] = useState(false);
   const [language, setLanguage] = useState<Language>('en');
-
-  // Interactive live simulation and video preview states
-  const [simulating, setSimulating] = useState(false);
-  const [simulationToast, setSimulationToast] = useState<string | null>(null);
+  const [submissionModalVisible, setSubmissionModalVisible] = useState(false);
   const [videoModal, setVideoModal] = useState<{
     visible: boolean;
     title: string;
@@ -101,35 +100,6 @@ export default function CompetitionDetailScreen() {
     setIsRegistered(apiIsRegistered);
     setLocalRegistration(registration);
   }, [apiIsRegistered, registration]);
-
-  // ── Concurrency Simulation Handler ──────────────────────────────────────────
-
-  const handleSimulateBooking = useCallback(async () => {
-    if (!competition) return;
-    setSimulating(true);
-    try {
-      const res = await api.competitions.simulateBooking(competition._id);
-      setSimulationToast(res.message);
-      refetch();
-      setTimeout(() => setSimulationToast(null), 4000);
-    } catch (e: unknown) {
-      Alert.alert('Simulation Error', e instanceof Error ? e.message : 'Booking failed');
-    } finally {
-      setSimulating(false);
-    }
-  }, [competition, refetch]);
-
-  const handleResetSpots = useCallback(async () => {
-    if (!competition) return;
-    try {
-      const res = await api.competitions.resetSpots(competition._id);
-      refetch();
-      setSimulationToast(res.message);
-      setTimeout(() => setSimulationToast(null), 3000);
-    } catch (e: unknown) {
-      Alert.alert('Reset Error', e instanceof Error ? e.message : 'Reset failed');
-    }
-  }, [competition, refetch]);
 
   // ── Atomic Registration Handler ─────────────────────────────────────────────
 
@@ -153,36 +123,19 @@ export default function CompetitionDetailScreen() {
 
   const handleUpload = useCallback(() => {
     if (!competition) return;
-
-    if (Platform.OS === 'web' && typeof window !== 'undefined') {
-      const url = window.prompt(
-        'Enter your submission video URL (YouTube, Vimeo, Google Drive):',
-        'https://youtube.com/watch?v=feedants_dance_entry'
-      );
-      if (url && url.trim()) {
-        api.competitions
-          .submitEntry(competition._id, url.trim())
-          .then(({ registration: reg }) => {
-            setLocalRegistration(reg);
-            Alert.alert('✅ Submitted!', 'Your video entry has been recorded.');
-          })
-          .catch((e: unknown) =>
-            Alert.alert('Submission Error', e instanceof Error ? e.message : 'Submission failed')
-          );
-      }
-    } else {
-      // Mobile / demo flow
-      api.competitions
-        .submitEntry(competition._id, 'https://youtube.com/watch?v=feedants_demo_entry')
-        .then(({ registration: reg }) => {
-          setLocalRegistration(reg);
-          Alert.alert('✅ Submitted!', 'Your demo video entry has been recorded.');
-        })
-        .catch((e: unknown) =>
-          Alert.alert('Submission Error', e instanceof Error ? e.message : 'Submission failed')
-        );
-    }
+    setSubmissionModalVisible(true);
   }, [competition]);
+
+  const handleSubmitEntry = useCallback(
+    async (url: string) => {
+      if (!competition) return;
+      const { registration: reg } = await api.competitions.submitEntry(competition._id, url);
+      setLocalRegistration(reg);
+      refetch();
+      Alert.alert('✅ Submitted!', 'Your video entry has been recorded.');
+    },
+    [competition, refetch]
+  );
 
   const handleCTAPress = useCallback(() => {
     if (!competition) return;
@@ -317,7 +270,8 @@ export default function CompetitionDetailScreen() {
 
         {/* Advertisement Placeholder matching reference */}
         <View style={styles.adBox}>
-          <Text style={styles.adText}>📢 Ad Here</Text>
+          <MegaphoneIcon size={16} color="#64748B" style={{ marginRight: 6 }} />
+          <Text style={styles.adText}>Ad Here</Text>
         </View>
 
         {/* Spacer to prevent content being covered by sticky BottomCTA and BottomNavigation */}
@@ -372,6 +326,14 @@ export default function CompetitionDetailScreen() {
           </View>
         </View>
       )}
+
+      {/* ── Submission Upload Modal (React Native Native + Web compatible) ── */}
+      <SubmissionModal
+        visible={submissionModalVisible}
+        competitionTitle={competition.title}
+        onClose={() => setSubmissionModalVisible(false)}
+        onSubmit={handleSubmitEntry}
+      />
     </SafeAreaView>
   );
 }
@@ -418,19 +380,21 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   adBox: {
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#FFFFFF',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: '#CBD5E1',
     borderStyle: 'dashed',
-    paddingVertical: 10,
+    paddingVertical: 9,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     marginHorizontal: 12,
     marginVertical: 6,
   },
   adText: {
-    fontSize: 11,
-    color: '#9CA3AF',
+    fontSize: 12,
+    color: '#64748B',
     fontWeight: '600',
   },
 

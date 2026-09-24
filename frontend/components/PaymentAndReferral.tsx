@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, Clipboard } from 'react-native';
+import { ShieldCheckIcon, MegaphoneIcon } from './Icons';
 
 interface Props {
   referralCode?: string;
@@ -54,11 +55,11 @@ export function PaymentAndReferral({ referralCode, onPrizeInfoPress }: Props) {
         {/* Right column: Trust & Razorpay */}
         <View style={styles.colRight}>
           <View style={styles.trustItem}>
-            <Text style={styles.shieldIcon}>🛡️</Text>
+            <ShieldCheckIcon size={14} color="#0B1E3B" style={{ marginRight: 5 }} />
             <Text style={styles.trustText}>Refund policy</Text>
           </View>
           <View style={styles.trustItem}>
-            <Text style={styles.shieldIcon}>🛡️</Text>
+            <ShieldCheckIcon size={14} color="#0B1E3B" style={{ marginRight: 5 }} />
             <Text style={styles.trustSubText}>
               Secure payments powered by{' '}
               <Text style={styles.razorpayBrand}>Razorpay</Text>
@@ -69,23 +70,28 @@ export function PaymentAndReferral({ referralCode, onPrizeInfoPress }: Props) {
 
       {/* Refer & Earn Card */}
       <View style={styles.referCard}>
-        <View style={styles.referTopRow}>
-          <Text style={styles.megaphoneIcon}>📢</Text>
+        {/* Left megaphone icon */}
+        <View style={styles.megaphoneWrap}>
+          <MegaphoneIcon size={28} color="#10B981" />
+        </View>
+
+        {/* Center column: Header & connected input */}
+        <View style={styles.referCenterCol}>
           <Text style={styles.referTitle}>Refer &amp; Earn more discount</Text>
-        </View>
-
-        <View style={styles.linkRow}>
-          <View style={styles.linkBox}>
-            <Text style={styles.linkText} numberOfLines={1}>
-              {referralLink}
-            </Text>
+          <View style={styles.linkGroup}>
+            <View style={styles.linkInput}>
+              <Text style={styles.linkText} numberOfLines={1}>
+                {referralLink}
+              </Text>
+            </View>
+            <TouchableOpacity style={styles.copyBtn} onPress={handleCopy} activeOpacity={0.8}>
+              <Text style={styles.copyBtnText}>Copy Link</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.copyBtn} onPress={handleCopy} activeOpacity={0.8}>
-            <Text style={styles.copyBtnText}>Copy Link</Text>
-          </TouchableOpacity>
         </View>
 
-        <View style={styles.referActionRow}>
+        {/* Right column: Refer Now CTA and earn subtext */}
+        <View style={styles.referRightCol}>
           <TouchableOpacity
             style={styles.referBtn}
             onPress={() => Alert.alert('Refer Now', `Share this referral link with your peers:\n${referralLink}`)}
@@ -111,16 +117,16 @@ const styles = StyleSheet.create({
   },
   disclaimer: {
     backgroundColor: '#E6F7F5',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: '#C5ECE6',
+    borderColor: '#CBECE6',
   },
   disclaimerText: {
-    fontSize: 11,
-    color: '#111827',
+    fontSize: 11.5,
+    color: '#0B1E3B',
     lineHeight: 16,
   },
   infoIcon: {
@@ -142,65 +148,62 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   colLeft: {
-    flex: 1.1,
+    flex: 1.15,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
     paddingRight: 6,
   },
   playBox: {
-    width: 34,
-    height: 34,
-    borderRadius: 6,
-    backgroundColor: '#E0F2F1',
+    width: 38,
+    height: 38,
+    borderRadius: 8,
+    backgroundColor: '#D5EFEA',
     alignItems: 'center',
     justifyContent: 'center',
   },
   playIcon: {
     color: TEAL,
-    fontSize: 12,
-    marginLeft: 1,
+    fontSize: 14,
+    marginLeft: 2,
   },
   faqInfo: {
     flex: 1,
   },
   faqTitle: {
-    fontSize: 11,
+    fontSize: 11.5,
     fontWeight: '800',
-    color: '#111827',
-    lineHeight: 14,
+    color: '#0B1E3B',
+    lineHeight: 15,
   },
   faqSub: {
     fontSize: 10,
-    color: '#6B7280',
+    color: '#707E94',
     marginTop: 2,
   },
   vertDivider: {
     width: 1,
-    height: 40,
-    backgroundColor: '#ECEEF0',
-    marginHorizontal: 6,
+    height: 42,
+    backgroundColor: '#ECEEF2',
+    marginHorizontal: 4,
   },
   colRight: {
     flex: 1,
-    gap: 4,
+    gap: 5,
+    paddingLeft: 4,
   },
   trustItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-  },
-  shieldIcon: {
-    fontSize: 11,
   },
   trustText: {
-    fontSize: 11,
+    fontSize: 11.5,
     fontWeight: '700',
-    color: '#111827',
+    color: '#0B1E3B',
   },
   trustSubText: {
     fontSize: 10,
-    color: '#6B7280',
+    color: '#0B1E3B',
     lineHeight: 14,
   },
   razorpayBrand: {
@@ -209,81 +212,91 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   referCard: {
-    backgroundColor: '#E6F7F5',
-    borderRadius: 14,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#C5ECE6',
-    marginBottom: 6,
-  },
-  referTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    marginBottom: 8,
+    backgroundColor: '#EBF9F4',
+    borderRadius: 14,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#CBEEDB',
+    marginBottom: 6,
   },
-  megaphoneIcon: {
-    fontSize: 14,
+  megaphoneWrap: {
+    marginRight: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  referCenterCol: {
+    flex: 1,
+    marginRight: 6,
   },
   referTitle: {
     fontSize: 12,
     fontWeight: '800',
-    color: '#111827',
+    color: '#0B1E3B',
+    marginBottom: 5,
   },
-  linkRow: {
+  linkGroup: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    marginBottom: 8,
   },
-  linkBox: {
+  linkInput: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#C5ECE6',
-    paddingHorizontal: 8,
-    paddingVertical: 6,
+    borderColor: '#B2DFDB',
+    borderTopLeftRadius: 6,
+    borderBottomLeftRadius: 6,
+    paddingHorizontal: 7,
+    paddingVertical: 5,
   },
   linkText: {
     fontSize: 10,
-    color: '#6B7280',
+    color: TEAL,
+    fontWeight: '600',
   },
   copyBtn: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#C5ECE6',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    borderLeftWidth: 0,
+    borderColor: '#B2DFDB',
+    borderTopRightRadius: 6,
+    borderBottomRightRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
   },
   copyBtnText: {
     fontSize: 10,
-    color: '#374151',
-    fontWeight: '600',
+    color: TEAL,
+    fontWeight: '700',
   },
-  referActionRow: {
-    flexDirection: 'row',
+  referRightCol: {
     alignItems: 'center',
-    gap: 10,
+    justifyContent: 'center',
+    minWidth: 85,
   },
   referBtn: {
-    backgroundColor: '#006064',
+    backgroundColor: TEAL,
     borderRadius: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 5.5,
+    width: '100%',
+    alignItems: 'center',
   },
   referBtnText: {
     fontSize: 11,
     color: '#FFFFFF',
-    fontWeight: '700',
+    fontWeight: '800',
   },
   earnLabel: {
-    fontSize: 11,
-    color: '#4B5563',
+    fontSize: 9,
+    color: TEAL,
+    fontWeight: '600',
+    marginTop: 3,
+    textAlign: 'center',
   },
   earnHighlight: {
     color: TEAL,
-    fontWeight: '700',
+    fontWeight: '800',
   },
 });

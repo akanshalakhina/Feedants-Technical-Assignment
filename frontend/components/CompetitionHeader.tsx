@@ -38,7 +38,7 @@ export function CompetitionHeader({ language, onLanguageChange, onBack }: Props)
   );
 }
 
-const TEAL = '#006064';
+const TEAL = '#00796B';
 
 const styles = StyleSheet.create({
   headerContainer: {
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: 10,
+    paddingTop: 8,
     paddingBottom: 8,
     backgroundColor: '#F8F9FA',
   },
@@ -57,24 +57,27 @@ const styles = StyleSheet.create({
   },
   backArrow: {
     fontSize: 18,
-    color: '#111827',
+    color: '#0B1E3B',
     fontWeight: '700',
   },
   backText: {
     fontSize: 15,
-    color: '#111827',
+    color: '#0B1E3B',
     fontWeight: '700',
+    letterSpacing: -0.1,
   },
   langPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#E5E7EB',
+    backgroundColor: '#F1F3F5',
     borderRadius: 20,
     padding: 2,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
   langSide: {
     paddingVertical: 4,
-    paddingHorizontal: 10,
+    paddingHorizontal: 11,
     borderRadius: 16,
   },
   langSideActive: {
@@ -83,10 +86,10 @@ const styles = StyleSheet.create({
   langText: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#4B5563',
+    color: '#1F2937',
   },
   langTextActive: {
     color: '#FFFFFF',
-    fontWeight: '700',
+    fontWeight: '800',
   },
 });

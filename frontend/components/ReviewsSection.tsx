@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { api, ReviewItem } from '../services/api';
 import { AddReviewModal } from './AddReviewModal';
+import { ChatDotsIcon } from './Icons';
 
 interface Props {
   competitionId: string;
@@ -67,18 +68,19 @@ export function ReviewsSection({ competitionId, isLoggedIn, onLoginPrompt }: Pro
     <View style={styles.container}>
       {/* Clickable Header card matching page 3 screenshot */}
       <TouchableOpacity
-        style={styles.cardHeader}
+        style={[styles.cardHeader, expanded && styles.cardHeaderExpanded]}
         onPress={() => setExpanded((prev) => !prev)}
         activeOpacity={0.8}
       >
-        <View style={styles.headerLeft}>
-          <Text style={styles.hearTitle}>💬  Hear From Our Users</Text>
-          <Text style={styles.hearSub}>
-            {totalReviews > 0
-              ? `${averageRating} ★  •  ${totalReviews} participant review${totalReviews > 1 ? 's' : ''}`
-              : 'See what participants say about Feedants'}
-          </Text>
+        <View style={styles.chatIconCircle}>
+          <ChatDotsIcon size={16} color="#0B1E3B" />
         </View>
+
+        <View style={styles.headerLeft}>
+          <Text style={styles.hearTitle}>Hear From Our Users</Text>
+          <Text style={styles.hearSub}>See what participants say about Feedants</Text>
+        </View>
+
         <Text style={[styles.hearArrow, expanded && styles.hearArrowExpanded]}>
           {expanded ? '▲' : '›'}
         </Text>
@@ -172,7 +174,6 @@ const styles = StyleSheet.create({
   },
   cardHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderRadius: 14,
@@ -180,25 +181,38 @@ const styles = StyleSheet.create({
     borderColor: '#ECEEF0',
     paddingHorizontal: 12,
     paddingVertical: 12,
+    gap: 10,
+  },
+  cardHeaderExpanded: {
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+  chatIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F3F4F6',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   headerLeft: {
     flex: 1,
   },
   hearTitle: {
-    fontSize: 12,
+    fontSize: 12.5,
     fontWeight: '800',
-    color: '#111827',
+    color: '#0B1E3B',
   },
   hearSub: {
-    fontSize: 10,
-    color: '#6B7280',
+    fontSize: 11,
+    color: '#707E94',
     marginTop: 2,
   },
   hearArrow: {
-    fontSize: 18,
-    color: '#6B7280',
-    fontWeight: 'bold',
-    marginLeft: 8,
+    fontSize: 20,
+    color: '#0B1E3B',
+    fontWeight: '700',
+    marginLeft: 6,
   },
   hearArrowExpanded: {
     fontSize: 12,

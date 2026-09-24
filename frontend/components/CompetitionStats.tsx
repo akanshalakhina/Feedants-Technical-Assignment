@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SpotsProgress } from './SpotsProgress';
+import { TrophyIcon } from './Icons';
 
 interface Props {
   title: string;
@@ -25,7 +26,7 @@ export function CompetitionStats({
     <View style={styles.topCard}>
       {/* Title & Registered badge row */}
       <View style={styles.titleRow}>
-        <Text style={styles.title} numberOfLines={2}>
+        <Text style={styles.title} numberOfLines={1} adjustsFontSizeToFit>
           {title}
         </Text>
         {isRegistered && (
@@ -46,7 +47,7 @@ export function CompetitionStats({
           </View>
         ))}
         <View style={styles.certRow}>
-          <Text style={styles.certIcon}>🏆</Text>
+          <TrophyIcon size={14} color="#00796B" style={{ marginRight: 4 }} />
           <Text style={styles.certText}>Winners get certificate</Text>
         </View>
       </View>
@@ -77,9 +78,10 @@ const styles = StyleSheet.create({
   topCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    padding: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
     marginHorizontal: 12,
-    marginTop: 4,
+    marginTop: 2,
     marginBottom: 8,
     borderWidth: 1,
     borderColor: '#ECEEF0',
@@ -89,14 +91,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
-    gap: 8,
+    gap: 6,
   },
   title: {
-    fontSize: 19,
+    fontSize: 18,
     fontWeight: '800',
-    color: '#111827',
+    color: '#0B1E3B',
     flex: 1,
-    letterSpacing: -0.2,
+    letterSpacing: -0.3,
   },
   registeredBadge: {
     flexDirection: 'row',
@@ -107,7 +109,8 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     paddingVertical: 3,
     paddingHorizontal: 8,
-    gap: 5,
+    gap: 4,
+    flexShrink: 0,
   },
   checkCircle: {
     width: 14,
@@ -119,11 +122,11 @@ const styles = StyleSheet.create({
   },
   checkIcon: {
     color: '#FFF',
-    fontSize: 9,
+    fontSize: 8.5,
     fontWeight: '900',
   },
   registeredText: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: '700',
     color: TEAL,
   },
@@ -143,15 +146,11 @@ const styles = StyleSheet.create({
   tagText: {
     fontSize: 11,
     color: '#4B5563',
-    fontWeight: '500',
+    fontWeight: '600',
   },
   certRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-  },
-  certIcon: {
-    fontSize: 12,
   },
   certText: {
     fontSize: 11,
@@ -162,29 +161,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    paddingTop: 4,
+    paddingTop: 2,
   },
   statCol: {
-    minWidth: 80,
+    minWidth: 75,
   },
   statLabel: {
     fontSize: 11,
-    color: '#6B7280',
-    marginBottom: 3,
+    color: '#707E94',
+    marginBottom: 4,
     fontWeight: '500',
   },
   prizePoolValue: {
     fontSize: 22,
     fontWeight: '800',
     color: TEAL,
+    letterSpacing: -0.3,
   },
   entryFeeValue: {
     fontSize: 22,
     fontWeight: '800',
-    color: '#111827',
+    color: '#0B1E3B',
+    letterSpacing: -0.3,
   },
   spotsCol: {
-    flex: 1,
     alignItems: 'flex-end',
   },
 });

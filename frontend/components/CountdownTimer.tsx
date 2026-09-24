@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { HourglassIcon, StopwatchIcon } from './Icons';
 
 interface Props {
   targetDate: string;
@@ -36,7 +37,7 @@ export function CountdownTimer({ targetDate, label = 'Registration closes in' }:
   if (expired) {
     return (
       <View style={styles.container}>
-        <Text style={styles.expiredText}>⌛ Registration has closed</Text>
+        <Text style={styles.expiredText}>Registration has closed</Text>
       </View>
     );
   }
@@ -44,7 +45,7 @@ export function CountdownTimer({ targetDate, label = 'Registration closes in' }:
   return (
     <View style={styles.container}>
       <View style={styles.leftGroup}>
-        <Text style={styles.icon}>⌛</Text>
+        <HourglassIcon size={14} color="#00796B" style={{ marginRight: 5 }} />
         <Text style={styles.label}>{label}</Text>
       </View>
       <View style={styles.timerRow}>
@@ -53,7 +54,7 @@ export function CountdownTimer({ targetDate, label = 'Registration closes in' }:
         </Text>
       </View>
       <View style={styles.hurryBadge}>
-        <Text style={styles.icon}>⏱️</Text>
+        <StopwatchIcon size={14} color="#00796B" style={{ marginRight: 4 }} />
         <Text style={styles.hurryText}>Hurry up!</Text>
       </View>
     </View>
@@ -66,28 +67,26 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#E6F7F5',
     borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 9,
     marginHorizontal: 12,
     marginVertical: 4,
     borderWidth: 1,
-    borderColor: '#C5ECE6',
+    borderColor: '#CBECE6',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    gap: 6,
   },
   leftGroup: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-  },
-  icon: {
-    fontSize: 12,
+    flexShrink: 1,
   },
   label: {
     fontSize: 11,
-    color: '#111827',
-    fontWeight: '600',
+    color: '#0B1E3B',
+    fontWeight: '700',
   },
   timerRow: {
     flexDirection: 'row',
@@ -102,7 +101,6 @@ const styles = StyleSheet.create({
   hurryBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3,
   },
   hurryText: {
     fontSize: 11,
@@ -111,9 +109,9 @@ const styles = StyleSheet.create({
   },
   expiredText: {
     fontSize: 12,
-    color: '#6B7280',
+    color: '#707E94',
     textAlign: 'center',
     padding: 2,
-    fontWeight: '500',
+    fontWeight: '600',
   },
 });

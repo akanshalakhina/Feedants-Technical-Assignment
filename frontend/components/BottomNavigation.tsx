@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { HomeIcon, SearchIcon, TrophyIcon } from './Icons';
 
 interface Props {
   activeTab?: string;
@@ -21,21 +22,25 @@ export function BottomNavigation({
   return (
     <View style={styles.bottomNav}>
       <TouchableOpacity style={styles.navItem} onPress={onHomePress} activeOpacity={0.7}>
-        <Text style={[styles.navIcon, activeTab === 'home' && styles.navIconActive]}>🏠</Text>
+        <HomeIcon size={19} color={activeTab === 'home' ? '#00796B' : '#707E94'} />
         <Text style={[styles.navLabel, activeTab === 'home' && styles.navLabelActive]}>Home</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.navItem} onPress={onExplorePress} activeOpacity={0.7}>
-        <Text style={[styles.navIcon, activeTab === 'explore' && styles.navIconActive]}>🔍</Text>
+        <SearchIcon size={19} color={activeTab === 'explore' ? '#00796B' : '#707E94'} />
         <Text style={[styles.navLabel, activeTab === 'explore' && styles.navLabelActive]}>Explore</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.navCenterBtn} onPress={onCenterPress} activeOpacity={0.85}>
-        <Text style={styles.navCenterIcon}>+</Text>
+        <View style={styles.navCenterSquircle}>
+          <View style={styles.navCenterWhiteCircle}>
+            <Text style={styles.navCenterPlus}>+</Text>
+          </View>
+        </View>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.navItem} onPress={onCompetitionsPress} activeOpacity={0.7}>
-        <Text style={[styles.navIcon, activeTab === 'competitions' && styles.navIconActive]}>🏆</Text>
+        <TrophyIcon size={19} color={activeTab === 'competitions' ? '#00796B' : '#707E94'} />
         <Text style={[styles.navLabel, activeTab === 'competitions' && styles.navLabelActive]}>
           Competitions
         </Text>
@@ -43,7 +48,7 @@ export function BottomNavigation({
 
       <TouchableOpacity style={styles.navItem} onPress={onProfilePress} activeOpacity={0.7}>
         <Image
-          source={{ uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80' }}
+          source={require('../assets/images/profile_avatar.png')}
           style={styles.profileAvatar}
         />
         <Text style={[styles.navLabel, activeTab === 'profile' && styles.navLabelActive]}>Profile</Text>
@@ -52,7 +57,7 @@ export function BottomNavigation({
   );
 }
 
-const TEAL = '#005953';
+const TEAL = '#00796B';
 
 const styles = StyleSheet.create({
   bottomNav: {
@@ -74,44 +79,49 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 2,
-    minWidth: 50,
-  },
-  navIcon: {
-    fontSize: 16,
-    color: '#9CA3AF',
-  },
-  navIconActive: {
-    color: TEAL,
+    minWidth: 55,
   },
   navLabel: {
-    fontSize: 9,
-    color: '#9CA3AF',
-    marginTop: 2,
-    fontWeight: '600',
+    fontSize: 10,
+    color: '#707E94',
+    marginTop: 3,
+    fontWeight: '500',
   },
   navLabelActive: {
     color: TEAL,
-    fontWeight: '800',
+    fontWeight: '700',
   },
   navCenterBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navCenterSquircle: {
+    width: 44,
+    height: 34,
+    borderRadius: 10,
     backgroundColor: TEAL,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 4,
   },
-  navCenterIcon: {
-    color: '#FFFFFF',
-    fontSize: 20,
-    lineHeight: 22,
-    fontWeight: '700',
+  navCenterWhiteCircle: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navCenterPlus: {
+    color: TEAL,
+    fontSize: 15,
+    fontWeight: '900',
+    lineHeight: 16,
+    marginLeft: 0.5,
   },
   profileAvatar: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     backgroundColor: '#F3F4F6',
   },
 });

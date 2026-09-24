@@ -25,7 +25,7 @@ export function TabSection({ tabs }: Props) {
   };
 
   return (
-    <View style={styles.section}>
+    <View style={styles.card}>
       {/* Tab bar */}
       <View style={styles.tabBar}>
         {tabs.map((tab) => {
@@ -69,33 +69,33 @@ export function TabSection({ tabs }: Props) {
 const TEAL = '#00796B';
 
 const styles = StyleSheet.create({
-  section: {
-    marginHorizontal: 12,
-    marginVertical: 4,
+  card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 14,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: '#ECEEF0',
-    padding: 12,
+    padding: 14,
+    marginHorizontal: 12,
+    marginVertical: 4,
   },
   tabBar: {
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
-    marginBottom: 8,
+    borderBottomColor: '#E2E8F0',
+    marginBottom: 10,
   },
   tab: {
     paddingVertical: 8,
-    paddingRight: 14,
+    paddingRight: 16,
     marginBottom: -1,
   },
   activeTab: {
-    borderBottomWidth: 2,
+    borderBottomWidth: 2.5,
     borderBottomColor: TEAL,
   },
   tabLabel: {
-    fontSize: 12,
-    color: '#6B7280',
+    fontSize: 12.5,
+    color: '#334155',
     fontWeight: '600',
   },
   activeTabLabel: {
@@ -106,16 +106,17 @@ const styles = StyleSheet.create({
     paddingTop: 2,
   },
   text: {
-    fontSize: 12,
-    color: '#4B5563',
-    lineHeight: 18,
+    fontSize: 12.5,
+    color: '#475569',
+    lineHeight: 19,
   },
   toggle: {
-    marginTop: 6,
+    marginTop: 8,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   toggleText: {
-    fontSize: 11,
+    fontSize: 11.5,
     color: TEAL,
     fontWeight: '700',
   },

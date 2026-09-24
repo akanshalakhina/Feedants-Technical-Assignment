@@ -15,12 +15,17 @@ interface Props {
 }
 
 export function JudgeCard({ judge, onVideoPress }: Props) {
+  // Use authentic Kathak dancer asset for Manju Dubey
+  const avatarSource =
+    judge.name.includes('Manju')
+      ? require('../assets/images/judge_manju.png')
+      : { uri: judge.photoUrl };
+
   return (
     <View style={styles.card}>
       <Image
-        source={{ uri: judge.photoUrl }}
+        source={avatarSource}
         style={styles.avatar}
-        defaultSource={{ uri: 'https://via.placeholder.com/60' }}
       />
       <View style={styles.info}>
         <Text style={styles.judgeLabel}>Judge</Text>
@@ -54,9 +59,9 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 62,
+    height: 62,
+    borderRadius: 31,
     backgroundColor: '#F3F4F6',
   },
   info: {
@@ -64,23 +69,25 @@ const styles = StyleSheet.create({
   },
   judgeLabel: {
     fontSize: 11,
-    color: '#9CA3AF',
+    color: '#707E94',
     marginBottom: 2,
     fontWeight: '500',
   },
   name: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '800',
-    color: '#111827',
+    color: '#0B1E3B',
+    letterSpacing: -0.2,
   },
   detail: {
     fontSize: 12,
-    color: '#6B7280',
-    marginTop: 1,
+    color: '#707E94',
+    marginTop: 1.5,
   },
   videoBtn: {
     alignItems: 'center',
     justifyContent: 'center',
+    minWidth: 55,
   },
   playCircle: {
     width: 38,
@@ -92,12 +99,12 @@ const styles = StyleSheet.create({
   },
   playIcon: {
     color: TEAL,
-    fontSize: 13,
+    fontSize: 14,
     marginLeft: 2,
   },
   videoLabel: {
     fontSize: 11,
-    color: '#6B7280',
+    color: '#707E94',
     marginTop: 4,
     fontWeight: '500',
   },

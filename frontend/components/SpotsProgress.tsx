@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { UsersIcon } from './Icons';
 
 interface Props {
   totalSpots: number;
@@ -13,14 +14,17 @@ export function SpotsProgress({ totalSpots, bookedSpots }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>
-        👥 {isFull ? 'Fully Booked' : `Only ${remaining} spots left`}
-      </Text>
+      <View style={styles.labelRow}>
+        <UsersIcon size={14} color="#00796B" style={{ marginRight: 4 }} />
+        <Text style={styles.label}>
+          {isFull ? 'Fully Booked' : `Only ${remaining} spots left`}
+        </Text>
+      </View>
       <View style={styles.track}>
         <View
           style={[
             styles.fill,
-            { width: `${Math.max(5, progress * 100)}%` as `${number}%` },
+            { width: `${Math.min(100, Math.max(5, progress * 100))}%` as `${number}%` },
           ]}
         />
       </View>
@@ -35,31 +39,35 @@ const TEAL = '#00796B';
 
 const styles = StyleSheet.create({
   container: {
-    minWidth: 120,
+    minWidth: 110,
     alignItems: 'flex-start',
+  },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
   },
   label: {
     fontSize: 11,
     fontWeight: '700',
     color: TEAL,
-    marginBottom: 5,
   },
   track: {
-    width: '100%',
-    height: 3,
-    backgroundColor: '#D7F0EC',
-    borderRadius: 2,
+    width: 110,
+    height: 4.5,
+    backgroundColor: '#DCF2EE',
+    borderRadius: 3,
     overflow: 'hidden',
     marginBottom: 4,
   },
   fill: {
     height: '100%',
     backgroundColor: TEAL,
-    borderRadius: 2,
+    borderRadius: 3,
   },
   booked: {
-    fontSize: 10,
-    color: '#6B7280',
+    fontSize: 11,
+    color: '#707E94',
     fontWeight: '500',
   },
 });
