@@ -248,13 +248,13 @@ async function seed() {
   await Registration.create({
     userId: user1._id,
     competitionId: comp1._id,
-    paymentStatus: 'paid',
+    paymentStatus: 'not_implemented',
   });
 
   await Registration.create({
     userId: user1._id,
     competitionId: comp2._id,
-    paymentStatus: 'paid',
+    paymentStatus: 'not_implemented',
   });
 
   // Seed realistic participant reviews

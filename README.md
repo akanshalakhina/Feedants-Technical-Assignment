@@ -32,13 +32,13 @@ A production-quality implementation of the **Competition Details** screen from t
 │
 ├── frontend/
 │   ├── app/
-│   │   ├── _layout.tsx           # Mobile frame wrapper + AuthProvider + Demo Switcher
+│   │   ├── _layout.tsx           # Mobile frame wrapper + AuthProvider + responsive frame
 │   │   ├── index.tsx             # Competition list (Home)
 │   │   ├── login.tsx             # Login / Register screen
 │   │   └── competition/[id].tsx  # ★ Competition Details screen (Modular)
 │   ├── components/
 │   │   ├── CompetitionHeader.tsx # Header, back nav, language toggle, status badge, tags
-│   │   ├── CompetitionStats.tsx  # Prize pool, fee, spot progress & concurrency simulation
+│   │   ├── CompetitionStats.tsx  # Prize pool, fee, spot progress & remaining spots from DB
 │   │   ├── JudgeCard.tsx         # Judge profile, photo, title, experience, video action
 │   │   ├── CountdownTimer.tsx    # Live countdown timer with 'Hurry up!' badge
 │   │   ├── ImportantDates.tsx    # 2x2 grid card (Register, Submission, Result dates)
@@ -148,8 +148,7 @@ npm start
 | GET    | `/api/competitions/:id/participation`     | Required | Check user participation status      |
 | POST   | `/api/competitions/:id/register`          | Required | Register (atomic spot booking)       |
 | POST   | `/api/competitions/:id/submission`        | Required | Submit entry video URL               |
-| POST   | `/api/competitions/:id/simulate-booking`  | None     | Demo utility: simulate live booking  |
-| POST   | `/api/competitions/:id/reset-spots`       | None     | Demo utility: reset spots to seed    |
+
 
 ---
 
@@ -177,9 +176,8 @@ MONGO_URI=mongodb://127.0.0.1:27017/feedants
 # Secret key for JWT session tokens
 JWT_SECRET=your_super_secret_key_change_in_production
 
-# Optional environment setting (when set to 'production', demo simulation endpoints return 403)
+# Optional environment setting
 NODE_ENV=development
-ALLOW_DEMO_ENDPOINTS=true
 ```
 
 ---
@@ -188,7 +186,7 @@ ALLOW_DEMO_ENDPOINTS=true
 
 ### 1. Important Assumptions
 1. **User Identity & Auth**: In a real app, users authenticate via OTP/phone or social login. Here, we implemented standard email/password with JWT tokens stored via `AsyncStorage` and auto-loaded on boot.
-2. **Payment Flow**: Payment is assumed to be handled asynchronously via a payment gateway (e.g. Razorpay). The registration model tracks `paymentStatus: 'paid' | 'pending' | 'failed'`. In the current demo, payment is mocked as successful immediately upon claiming a spot.
+2. **Payment Flow**: Payment is **NOT IMPLEMENTED**. The assignment scope is the Competition Details screen, not the payment gateway. `paymentStatus` is stored as `'not_implemented'` in the database to be explicit. When Razorpay integration is added, this field transitions to `'paid'` or `'failed'` via a webhook listener (see Production Improvements).
 3. **Submission Format**: Video submissions are submitted via streaming URL (YouTube, Vimeo, Cloudflare Stream, or direct MP4 link), which is validated by the server and client.
 4. **Time & Timezones**: All lifecycle timestamps (`registrationCloseDate`, `submissionStartDate`, `submissionEndDate`, `resultDate`) are stored in UTC ISO-8601 format and converted to the user's local timezone for countdowns and display.
 5. **Platform Target**: The app is built with pure React Native components (`View`, `Text`, `ScrollView`, `TouchableOpacity`, `Pressable`, `StyleSheet`, `Modal`, `TextInput`, `ActivityIndicator`) runnable natively on iOS and Android via Expo, with automatic responsive framing when previewed in web browsers.
@@ -252,15 +250,16 @@ If this module were developed further for a production system supporting million
 cd backend
 npm test
 ```
-**Test Results**: 8/8 Tests Passed:
+**Test Results**: 9/9 Tests Passed:
 - `GET /health` (200 OK)
 - `GET /api/competitions` (List active competitions)
 - `GET /api/competitions/:id` (Details + lifecycle dates)
 - `GET /api/competitions/invalid-id` (400 Bad Request)
 - `POST /api/competitions/:id/register` without auth (401 Unauthorized)
-- `POST /api/competitions/:id/register` with auth (Atomic spot reservation)
+- `POST /api/competitions/:id/register` with auth (Atomic spot reservation, paymentStatus: not_implemented)
 - Duplicate registration attempt (409 Conflict + spots rollback)
-- Production guard on utility endpoints (403 Forbidden in production)
+- Real submission persistence: URL saved and readable from DB after refresh
+- Real reviews persistence: Review saved, average rating recalculated, readable from DB after refresh
 
 ### Running Frontend Type-Check:
 ```bash

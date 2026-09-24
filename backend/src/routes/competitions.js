@@ -8,30 +8,12 @@ const {
   getRegistrationStatus,
   getParticipation,
   getWinners,
-  simulateBooking,
-  resetSpots,
 } = require('../controllers/competitionController');
 const { getReviews, createReview } = require('../controllers/reviewController');
 const { auth, optionalAuth } = require('../middleware/auth');
 
-// Public – list all non-draft competitions
-router.get('/', listCompetitions);
-
-// Protection guard: disable demo/simulation routes in production unless explicitly allowed
-const devOnly = (_req, res, next) => {
-  if (process.env.NODE_ENV === 'production' && !process.env.ALLOW_DEMO_ENDPOINTS) {
-    return res.status(403).json({
-      message: 'Forbidden: Development and demo endpoints are disabled in production environment',
-    });
-  }
-  next();
-};
-
-// Utility routes (strictly guarded in production)
-router.post('/:id/simulate-booking', devOnly, simulateBooking);
-router.post('/:id/reset-spots', devOnly, resetSpots);
-
 // Public endpoints
+router.get('/', listCompetitions);
 router.get('/:id', optionalAuth, getCompetition);
 router.get('/:id/winners', getWinners);
 router.get('/:id/reviews', getReviews);

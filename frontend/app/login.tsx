@@ -114,13 +114,6 @@ export default function LoginScreen() {
               </Text>
             </Text>
           </TouchableOpacity>
-
-          {/* Demo credentials */}
-          <View style={styles.demoBox}>
-            <Text style={styles.demoTitle}>🧪 Demo Accounts (after running seed):</Text>
-            <Text style={styles.demoRow}>✅ Registered:  arjun@example.com / password123</Text>
-            <Text style={styles.demoRow}>🆕 Unregistered: priya@example.com / password456</Text>
-          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -148,10 +141,4 @@ const styles = StyleSheet.create({
   switchRow:    { alignItems: 'center', marginTop: 20 },
   switchText:   { fontSize: 14, color: '#555' },
   switchLink:   { color: '#16A093', fontWeight: '700' },
-  demoBox: {
-    marginTop: 36, backgroundColor: '#F0FAFA', borderRadius: 12,
-    padding: 16, borderWidth: 1, borderColor: '#C8ECEA',
-  },
-  demoTitle:    { fontSize: 13, fontWeight: '700', color: '#333', marginBottom: 8 },
-  demoRow:      { fontSize: 12, color: '#555', marginBottom: 4 },
 });

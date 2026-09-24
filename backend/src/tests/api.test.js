@@ -54,10 +54,11 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  // Clean up test user & registrations
+  // Clean up test user, registrations, and reviews
   if (testUserId) {
     await User.findByIdAndDelete(testUserId);
     await Registration.deleteMany({ userId: testUserId });
+    await require('../models/Review').deleteMany({ userId: testUserId });
   }
   await mongoose.connection.close();
 });
@@ -95,7 +96,7 @@ describe('Feedants Backend API & Business Logic Smoke Tests', () => {
     expect(res.status).toBe(401);
   });
 
-  test('6. POST /api/competitions/:id/register with token successfully claims a spot atomically', async () => {
+  test('6. POST /api/competitions/:id/register with token successfully claims a spot atomically and tracks paymentStatus as not_implemented', async () => {
     const beforeComp = await Competition.findById(testCompId);
     const beforeSpots = beforeComp.bookedSpots;
 
@@ -105,6 +106,7 @@ describe('Feedants Backend API & Business Logic Smoke Tests', () => {
 
     expect(res.status).toBe(201);
     expect(res.body.registration).toBeDefined();
+    expect(res.body.registration.paymentStatus).toBe('not_implemented');
     expect(res.body.competition.bookedSpots).toBe(beforeSpots + 1);
   });
 
@@ -123,15 +125,35 @@ describe('Feedants Backend API & Business Logic Smoke Tests', () => {
     expect(afterComp.bookedSpots).toBe(spotsBefore);
   });
 
-  test('8. Dev endpoints are protected in production mode', async () => {
-    const origEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = 'production';
-    delete process.env.ALLOW_DEMO_ENDPOINTS;
+  test('8. Real submission persistence: POST /api/competitions/:id/submit persists URL to database', async () => {
+    const validUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+    const res = await request(app)
+      .post(`/api/competitions/${testCompId}/submit`)
+      .set('Authorization', `Bearer ${testToken}`)
+      .send({ submissionUrl: validUrl });
 
-    const res = await request(app).post(`/api/competitions/${testCompId}/simulate-booking`);
-    expect(res.status).toBe(403);
-    expect(res.body.message).toMatch(/disabled in production/i);
+    expect(res.status).toBe(200);
+    expect(res.body.registration.submissionUrl).toBe(validUrl);
 
-    process.env.NODE_ENV = origEnv;
+    // Verify persisted directly in MongoDB
+    const regInDb = await Registration.findOne({ userId: testUserId, competitionId: testCompId });
+    expect(regInDb).toBeDefined();
+    expect(regInDb.submissionUrl).toBe(validUrl);
+  });
+
+  test('9. Real reviews persistence: POST /api/competitions/:id/reviews persists review and recalculates stats', async () => {
+    const res = await request(app)
+      .post(`/api/competitions/${testCompId}/reviews`)
+      .set('Authorization', `Bearer ${testToken}`)
+      .send({ rating: 5, comment: 'Phenomenal classical dance competition!' });
+
+    expect(res.status).toBe(201);
+    expect(res.body.review.rating).toBe(5);
+
+    // Verify GET /api/competitions/:id/reviews recalculates count and average rating
+    const listRes = await request(app).get(`/api/competitions/${testCompId}/reviews`);
+    expect(listRes.status).toBe(200);
+    expect(listRes.body.totalReviews).toBeGreaterThan(0);
+    expect(listRes.body.averageRating).toBeGreaterThanOrEqual(1);
   });
 });

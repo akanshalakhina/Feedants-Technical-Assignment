@@ -14,8 +14,8 @@ const registrationSchema = new mongoose.Schema(
     },
     paymentStatus: {
       type: String,
-      enum: ['pending', 'paid', 'failed'],
-      default: 'paid', // mocked as paid for demo; real app would integrate Razorpay webhook
+      enum: ['not_implemented', 'pending', 'paid', 'failed'],
+      default: 'not_implemented', // Payment gateway integration is outside scope; explicitly tracked as not_implemented
     },
     submissionUrl: String,
     submittedAt: Date,

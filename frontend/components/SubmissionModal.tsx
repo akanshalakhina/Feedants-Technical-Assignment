@@ -18,17 +18,23 @@ interface Props {
 }
 
 export function SubmissionModal({ visible, competitionTitle, onClose, onSubmit }: Props) {
-  const [url, setUrl] = useState('https://youtube.com/watch?v=feedants_dance_entry');
+  const [url, setUrl] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    if (!url || !url.trim()) {
-      Alert.alert('Validation Error', 'Please enter a valid video submission URL');
+    const trimmed = url.trim();
+    if (!trimmed) {
+      Alert.alert('Validation Error', 'Please enter a video submission URL');
+      return;
+    }
+    if (!/^https?:\/\/.+/i.test(trimmed)) {
+      Alert.alert('Validation Error', 'Please enter a valid URL starting with http:// or https:// (e.g. YouTube, Vimeo, Google Drive)');
       return;
     }
     setSubmitting(true);
     try {
-      await onSubmit(url.trim());
+      await onSubmit(trimmed);
+      setUrl('');
       onClose();
     } catch (err: unknown) {
       Alert.alert('Submission Error', err instanceof Error ? err.message : 'Failed to submit entry');

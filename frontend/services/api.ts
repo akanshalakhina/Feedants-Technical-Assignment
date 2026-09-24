@@ -160,18 +160,6 @@ export const api = {
 
     getWinners: (id: string) =>
       request<{ winners: PreviousWinner[] }>(`/competitions/${id}/winners`),
-
-    simulateBooking: (id: string) =>
-      request<{ message: string; competition: Competition }>(
-        `/competitions/${id}/simulate-booking`,
-        { method: 'POST' }
-      ),
-
-    resetSpots: (id: string) =>
-      request<{ message: string; competition: Competition }>(
-        `/competitions/${id}/reset-spots`,
-        { method: 'POST' }
-      ),
   },
 
   reviews: {
