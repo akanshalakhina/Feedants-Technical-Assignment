@@ -9,6 +9,8 @@ const bcrypt = require('bcryptjs');
 const Competition = require('./src/models/Competition');
 const User = require('./src/models/User');
 const Registration = require('./src/models/Registration');
+const Review = require('./src/models/Review');
+const Submission = require('./src/models/Submission');
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/feedants';
 
@@ -21,6 +23,8 @@ async function seed() {
     Competition.deleteMany({}),
     User.deleteMany({}),
     Registration.deleteMany({}),
+    Review.deleteMany({}),
+    Submission.deleteMany({}),
   ]);
   console.log('Cleared existing data.');
 
@@ -228,13 +232,17 @@ async function seed() {
   });
 
   // ── Users ──────────────────────────────────────────────────────────────────
-  const [hash1, hash2] = await Promise.all([
+  const [hash1, hash2, hash3, hash4] = await Promise.all([
     bcrypt.hash('password123', 12),
     bcrypt.hash('password456', 12),
+    bcrypt.hash('password789', 12),
+    bcrypt.hash('passwordabc', 12),
   ]);
 
-  const user1 = await User.create({ name: 'Arjun Sharma', email: 'arjun@example.com', passwordHash: hash1 });
-  const user2 = await User.create({ name: 'Priya Patel',  email: 'priya@example.com', passwordHash: hash2 });
+  const user1 = await User.create({ name: 'Arjun Sharma', email: 'arjun@example.com', passwordHash: hash1, avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80' });
+  const user2 = await User.create({ name: 'Priya Patel',  email: 'priya@example.com', passwordHash: hash2, avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80' });
+  const user3 = await User.create({ name: 'Sneha Roy',    email: 'sneha@example.com', passwordHash: hash3, avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&auto=format&fit=crop&q=80' });
+  const user4 = await User.create({ name: 'Rohan Das',    email: 'rohan@example.com', passwordHash: hash4, avatarUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&auto=format&fit=crop&q=80' });
 
   // Arjun is registered for comp1 (Classical Dance) and comp2 (Short Film)
   await Registration.create({
@@ -248,6 +256,34 @@ async function seed() {
     competitionId: comp2._id,
     paymentStatus: 'paid',
   });
+
+  // Seed realistic participant reviews
+  await Review.create([
+    {
+      competitionId: comp1._id,
+      userId: user3._id,
+      userName: 'Sneha Roy',
+      userAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&auto=format&fit=crop&q=80',
+      rating: 5,
+      comment: 'The judging parameters are so transparent! Loved the Kathak masterclass and prompt feedback from Manju ma\'am.',
+    },
+    {
+      competitionId: comp1._id,
+      userId: user4._id,
+      userName: 'Rohan Das',
+      userAvatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&auto=format&fit=crop&q=80',
+      rating: 5,
+      comment: 'Feedants gave me my first verified stage to showcase classical dance. The cash prize was credited directly into my bank within 3 days!',
+    },
+    {
+      competitionId: comp1._id,
+      userId: user2._id,
+      userName: 'Priya Patel',
+      userAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80',
+      rating: 4,
+      comment: 'Super seamless video submission and clear rules. Looking forward to the results announcement!',
+    },
+  ]);
 
   console.log('\n✅ Seed complete with 4 diverse competitions!');
   console.log('─────────────────────────────────────────────────────────────');

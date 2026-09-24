@@ -6,9 +6,12 @@ const {
   registerForCompetition,
   submitEntry,
   getRegistrationStatus,
+  getParticipation,
+  getWinners,
   simulateBooking,
   resetSpots,
 } = require('../controllers/competitionController');
+const { getReviews, createReview } = require('../controllers/reviewController');
 const { auth, optionalAuth } = require('../middleware/auth');
 
 // Public – list all non-draft competitions
@@ -18,13 +21,18 @@ router.get('/', listCompetitions);
 router.post('/:id/simulate-booking', simulateBooking);
 router.post('/:id/reset-spots', resetSpots);
 
-// Public with optional auth – logged-in users also receive isRegistered flag
+// Public endpoints
 router.get('/:id', optionalAuth, getCompetition);
+router.get('/:id/winners', getWinners);
+router.get('/:id/reviews', getReviews);
 
-// Authenticated only
+// Authenticated endpoints
 router.post('/:id/register', auth, registerForCompetition);
 router.post('/:id/submit', auth, submitEntry);
+router.post('/:id/submission', auth, submitEntry);
+router.post('/:id/reviews', auth, createReview);
 router.get('/:id/registration-status', auth, getRegistrationStatus);
+router.get('/:id/participation', auth, getParticipation);
 
 module.exports = router;
 

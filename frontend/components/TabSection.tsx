@@ -71,8 +71,8 @@ const styles = StyleSheet.create({
   activeTab:      { borderBottomWidth: 2, borderBottomColor: TEAL },
   tabLabel:       { fontSize: 13, color: '#999', fontWeight: '500' },
   activeTabLabel: { color: TEAL, fontWeight: '700' },
-  content:        {},
-  text:           { fontSize: 14, color: TEAL, lineHeight: 22 },
-  toggle:         { marginTop: 8 },
-  toggleText:     { fontSize: 13, color: TEAL, fontWeight: '600' },
+  content:        { marginTop: 4 },
+  text:           { fontSize: 13, color: '#444444', lineHeight: 20 },
+  toggle:         { marginTop: 8, alignItems: 'center' },
+  toggleText:     { fontSize: 12, color: '#777777', fontWeight: '600' },
 });

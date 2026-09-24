@@ -21,25 +21,39 @@ A production-quality implementation of the **Competition Details** screen from t
 .
 ├── backend/
 │   ├── src/
-│   │   ├── models/          # Competition, User, Registration
-│   │   ├── controllers/     # authController, competitionController
+│   │   ├── models/          # Competition, User, Registration, Review, Submission
+│   │   ├── controllers/     # authController, competitionController, reviewController
 │   │   ├── routes/          # /auth, /competitions
 │   │   ├── middleware/      # JWT auth (strict + optional)
 │   │   └── index.js         # Express app entry point
-│   ├── seed.js              # Populates DB with sample data
+│   ├── seed.js              # Populates DB with realistic sample competitions & reviews
 │   ├── .env.example
 │   └── package.json
 │
 ├── frontend/
 │   ├── app/
-│   │   ├── _layout.tsx           # Root layout + AuthProvider
+│   │   ├── _layout.tsx           # Mobile frame wrapper + AuthProvider + Demo Switcher
 │   │   ├── index.tsx             # Competition list (Home)
 │   │   ├── login.tsx             # Login / Register screen
-│   │   └── competition/[id].tsx  # ★ Competition Details screen
-│   ├── components/               # 7 reusable components
+│   │   └── competition/[id].tsx  # ★ Competition Details screen (Modular)
+│   ├── components/
+│   │   ├── CompetitionHeader.tsx # Header, back nav, language toggle, status badge, tags
+│   │   ├── CompetitionStats.tsx  # Prize pool, fee, spot progress & concurrency simulation
+│   │   ├── JudgeCard.tsx         # Judge profile, photo, title, experience, video action
+│   │   ├── CountdownTimer.tsx    # Live countdown timer with 'Hurry up!' badge
+│   │   ├── ImportantDates.tsx    # 2x2 grid card (Register, Submission, Result dates)
+│   │   ├── PreviousWinners.tsx   # Horizontal winners scroll with video reels
+│   │   ├── TabSection.tsx        # About, Judging Parameters, Rules & Eligibility tabs
+│   │   ├── RewardsList.tsx       # Position rewards with medals/stars and teal amounts
+│   │   ├── PaymentAndReferral.tsx# Disclaimer, prize FAQ, Razorpay badge, Refer & Earn
+│   │   ├── ReviewsSection.tsx    # Dynamic MongoDB reviews list + 'Hear From Our Users'
+│   │   ├── AddReviewModal.tsx    # Interactive star rating (1-5) and review submission
+│   │   ├── BottomCTA.tsx         # Large sticky bottom action button
+│   │   ├── BottomNavigation.tsx  # 5-tab Feedants mobile navigation bar
+│   │   └── SpotsProgress.tsx     # Animated spots indicator with progress bar
 │   ├── context/AuthContext.tsx   # JWT session management
-│   ├── hooks/useCompetition.ts   # Competition data hook
-│   ├── services/api.ts           # Typed API layer
+│   ├── hooks/useCompetition.ts   # Competition data hook with 3s live polling
+│   ├── services/api.ts           # Typed API layer (auth, competitions, reviews)
 │   ├── config.ts                 # API base URL
 │   └── package.json
 │
@@ -120,17 +134,32 @@ npm start
 ---
 
 ## API Reference
-
+ 
 | Method | Endpoint                                  | Auth     | Description                          |
 |--------|-------------------------------------------|----------|--------------------------------------|
 | POST   | `/api/auth/register`                      | None     | Create account                       |
 | POST   | `/api/auth/login`                         | None     | Login → JWT                          |
-| GET    | `/api/auth/me`                            | Required | Get current user                     |
+| GET    | `/api/auth/me`                            | Required | Get current user profile             |
 | GET    | `/api/competitions`                       | None     | List all competitions                |
 | GET    | `/api/competitions/:id`                   | Optional | Competition detail + registration status |
+| GET    | `/api/competitions/:id/winners`           | None     | Fetch list of previous winners       |
+| GET    | `/api/competitions/:id/reviews`           | None     | Fetch dynamic user reviews & ratings |
+| POST   | `/api/competitions/:id/reviews`           | Required | Submit a review (1-5 stars + text)   |
+| GET    | `/api/competitions/:id/participation`     | Required | Check user participation status      |
 | POST   | `/api/competitions/:id/register`          | Required | Register (atomic spot booking)       |
-| POST   | `/api/competitions/:id/submit`            | Required | Submit entry URL                     |
-| GET    | `/api/competitions/:id/registration-status` | Required | Check if user is registered        |
+| POST   | `/api/competitions/:id/submission`        | Required | Submit entry video URL               |
+| POST   | `/api/competitions/:id/simulate-booking`  | None     | Demo utility: simulate live booking  |
+| POST   | `/api/competitions/:id/reset-spots`       | None     | Demo utility: reset spots to seed    |
+
+---
+
+## Database Models
+
+- **Competition**: Title, category, tags, prizePool, entryFee, totalSpots, bookedSpots, spotsRemaining (virtual), computedStatus (virtual), judge (name, title, experience, photoUrl, introVideoUrl), dates (registrationCloseDate, submissionStartDate, submissionEndDate, resultDate), bilingual content (en/hi), rewards array, previousWinners array.
+- **User**: Name, email, passwordHash, avatarUrl, referralCode.
+- **Registration**: userId, competitionId, paymentStatus, submissionUrl, submittedAt, timestamps. Compound unique index `{ userId: 1, competitionId: 1 }`.
+- **Review**: competitionId, userId, userName, userAvatar, rating (1-5), comment, timestamps. Compound unique index `{ competitionId: 1, userId: 1 }`.
+- **Submission**: competitionId, userId, videoUrl, title, description, status, timestamps. Compound unique index `{ competitionId: 1, userId: 1 }`.
 
 ---
 

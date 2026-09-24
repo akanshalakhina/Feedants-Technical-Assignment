@@ -17,23 +17,6 @@ function formatDate(iso: string) {
   return { date: `${day} ${month} ${year}`, time };
 }
 
-interface ItemProps {
-  icon:  string;
-  label: string;
-  date:  string;
-  time:  string;
-}
-
-function DateItem({ icon, label, date, time }: ItemProps) {
-  return (
-    <View style={styles.item}>
-      <Text style={styles.icon}>{icon}</Text>
-      <Text style={styles.label}>{label}</Text>
-      <Text style={styles.date}>{date}</Text>
-      <Text style={styles.time}>{time}</Text>
-    </View>
-  );
-}
 
 export function ImportantDates({ registerBefore, submissionStarts, submissionEnds, resultDate }: Props) {
   const rb = formatDate(registerBefore);
@@ -44,30 +27,67 @@ export function ImportantDates({ registerBefore, submissionStarts, submissionEnd
   return (
     <View style={styles.section}>
       <Text style={styles.title}>Important Dates</Text>
-      <View style={styles.grid}>
-        <DateItem icon="📅" label="Register Before"   date={rb.date} time={rb.time} />
-        <DateItem icon="✈️" label="Submission Starts" date={ss.date} time={ss.time} />
-        <DateItem icon="⬆️" label="Submission Ends"   date={se.date} time={se.time} />
-        <DateItem icon="🏆" label="Result Date"       date={rd.date} time={rd.time} />
+      <View style={styles.card}>
+        <View style={styles.row}>
+          <View style={[styles.quadrant, styles.borderRight, styles.borderBottom]}>
+            <Text style={styles.icon}>📅</Text>
+            <Text style={styles.label}>Register Before</Text>
+            <Text style={styles.date}>{rb.date}</Text>
+            <Text style={styles.time}>{rb.time}</Text>
+          </View>
+          <View style={[styles.quadrant, styles.borderBottom]}>
+            <Text style={styles.icon}>🚀</Text>
+            <Text style={styles.label}>Submission Starts</Text>
+            <Text style={styles.date}>{ss.date}</Text>
+            <Text style={styles.time}>{ss.time}</Text>
+          </View>
+        </View>
+        <View style={styles.row}>
+          <View style={[styles.quadrant, styles.borderRight]}>
+            <Text style={styles.icon}>📤</Text>
+            <Text style={styles.label}>Submission Ends</Text>
+            <Text style={styles.date}>{se.date}</Text>
+            <Text style={styles.time}>{se.time}</Text>
+          </View>
+          <View style={styles.quadrant}>
+            <Text style={styles.icon}>🏆</Text>
+            <Text style={styles.label}>Result Date</Text>
+            <Text style={styles.date}>{rd.date}</Text>
+            <Text style={styles.time}>{rd.time}</Text>
+          </View>
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  section: { marginHorizontal: 12, marginVertical: 8 },
-  title:   { fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginBottom: 10 },
-  grid:    { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  item: {
-    width: '47%',
+  section: { marginHorizontal: 12, marginVertical: 6 },
+  title:   { fontSize: 15, fontWeight: '700', color: '#1A1A1A', marginBottom: 8 },
+  card: {
     backgroundColor: '#FFF',
-    borderRadius: 10,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: '#EBEBEB',
+    overflow: 'hidden',
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  quadrant: {
+    flex: 1,
     padding: 12,
   },
-  icon:  { fontSize: 20, marginBottom: 4 },
-  label: { fontSize: 11, color: '#999', marginBottom: 4 },
-  date:  { fontSize: 14, fontWeight: '800', color: '#16A093', marginBottom: 2 },
-  time:  { fontSize: 12, color: '#555' },
+  borderRight: {
+    borderRightWidth: 1,
+    borderRightColor: '#F0F0F0',
+  },
+  borderBottom: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  icon:  { fontSize: 16, marginBottom: 4 },
+  label: { fontSize: 11, color: '#888888', marginBottom: 2 },
+  date:  { fontSize: 13, fontWeight: '700', color: '#1A1A1A', marginBottom: 2 },
+  time:  { fontSize: 11, color: '#666666' },
 });

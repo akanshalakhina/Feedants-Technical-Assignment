@@ -65,6 +65,28 @@ export interface Registration {
   createdAt: string;
 }
 
+export interface ReviewItem {
+  _id: string;
+  competitionId: string;
+  userId: string;
+  userName: string;
+  userAvatar: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
+export interface SubmissionItem {
+  _id: string;
+  competitionId: string;
+  userId: string;
+  videoUrl: string;
+  title?: string;
+  description?: string;
+  status: string;
+  createdAt: string;
+}
+
 // ─── HTTP helper ──────────────────────────────────────────────────────────────
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -122,7 +144,7 @@ export const api = {
 
     submitEntry: (id: string, submissionUrl: string) =>
       request<{ message: string; registration: Registration }>(
-        `/competitions/${id}/submit`,
+        `/competitions/${id}/submission`,
         { method: 'POST', body: JSON.stringify({ submissionUrl }) }
       ),
 
@@ -130,6 +152,14 @@ export const api = {
       request<{ isRegistered: boolean; registration: Registration | null }>(
         `/competitions/${id}/registration-status`
       ),
+
+    getParticipation: (id: string) =>
+      request<{ isRegistered: boolean; registration: Registration | null }>(
+        `/competitions/${id}/participation`
+      ),
+
+    getWinners: (id: string) =>
+      request<{ winners: PreviousWinner[] }>(`/competitions/${id}/winners`),
 
     simulateBooking: (id: string) =>
       request<{ message: string; competition: Competition }>(
@@ -142,6 +172,19 @@ export const api = {
         `/competitions/${id}/reset-spots`,
         { method: 'POST' }
       ),
+  },
+
+  reviews: {
+    list: (competitionId: string) =>
+      request<{ reviews: ReviewItem[]; totalReviews: number; averageRating: number }>(
+        `/competitions/${competitionId}/reviews`
+      ),
+
+    create: (competitionId: string, rating: number, comment: string) =>
+      request<{ message: string; review: ReviewItem }>(`/competitions/${competitionId}/reviews`, {
+        method: 'POST',
+        body: JSON.stringify({ rating, comment }),
+      }),
   },
 };
 

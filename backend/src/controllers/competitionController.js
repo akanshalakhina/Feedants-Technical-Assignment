@@ -141,14 +141,22 @@ exports.submitEntry = async (req, res) => {
       return res.status(404).json({ message: 'You are not registered for this competition' });
     }
 
-    res.json({ message: 'Submission recorded successfully', registration });
+    // Also persist in Submission collection
+    const Submission = require('../models/Submission');
+    const submission = await Submission.findOneAndUpdate(
+      { userId, competitionId },
+      { videoUrl: submissionUrl, status: 'submitted' },
+      { upsert: true, new: true }
+    );
+
+    res.json({ message: 'Submission recorded successfully', registration, submission });
   } catch (err) {
     console.error('submitEntry error:', err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 
-// ─── GET /api/competitions/:id/registration-status ───────────────────────────
+// ─── GET /api/competitions/:id/registration-status & /participation ───────────
 exports.getRegistrationStatus = async (req, res) => {
   try {
     const { id: competitionId } = req.params;
@@ -161,6 +169,21 @@ exports.getRegistrationStatus = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
+
+exports.getParticipation = exports.getRegistrationStatus;
+
+// ─── GET /api/competitions/:id/winners ────────────────────────────────────────
+exports.getWinners = async (req, res) => {
+  try {
+    const { id: competitionId } = req.params;
+    const competition = await Competition.findById(competitionId).select('previousWinners title').lean();
+    if (!competition) return res.status(404).json({ message: 'Competition not found' });
+    res.json({ winners: competition.previousWinners || [] });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
 
 // ─── POST /api/competitions/:id/simulate-booking ──────────────────────────────
 /**

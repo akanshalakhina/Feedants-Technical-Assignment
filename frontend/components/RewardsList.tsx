@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#F0F0F0',
     gap: 10,
   },
-  icon:   { fontSize: 20, width: 26, textAlign: 'center' },
-  label:  { flex: 1, fontSize: 14, color: '#1A1A1A' },
-  amount: { fontSize: 14, fontWeight: '800', color: '#1A1A1A' },
+  icon:   { fontSize: 18, width: 26, textAlign: 'center' },
+  label:  { flex: 1, fontSize: 13, color: '#333333', fontWeight: '500' },
+  amount: { fontSize: 14, fontWeight: '800', color: '#16A093' },
 });
