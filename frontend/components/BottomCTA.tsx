@@ -5,6 +5,7 @@ export type CTAAction = 'login' | 'register' | 'upload' | null;
 
 export interface CTAState {
   label: string;
+  subLabel?: string;
   disabled: boolean;
   action: CTAAction;
 }
@@ -27,49 +28,55 @@ export function BottomCTA({ cta, registering, onPress }: Props) {
         {registering ? (
           <ActivityIndicator color="#FFF" size="small" />
         ) : (
-          <Text style={styles.ctaText}>{cta.label}</Text>
+          <View style={styles.contentCol}>
+            <Text style={styles.ctaText}>{cta.label}</Text>
+            {cta.subLabel ? (
+              <Text style={styles.ctaSubText}>{cta.subLabel}</Text>
+            ) : null}
+          </View>
         )}
       </TouchableOpacity>
     </View>
   );
 }
 
-const TEAL = '#16A093';
+const TEAL = '#005953';
 
 const styles = StyleSheet.create({
   ctaWrap: {
     position: 'absolute',
-    bottom: 58, // Sits directly above bottom navigation
+    bottom: 56, // Sits directly above bottom navigation
     left: 0,
     right: 0,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: 'rgba(255,255,255,0.95)',
-    borderTopWidth: 1,
-    borderTopColor: '#F0F0F0',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#F8F9FA',
     zIndex: 10,
   },
   ctaBtn: {
     backgroundColor: TEAL,
-    borderRadius: 10,
-    paddingVertical: 14,
+    borderRadius: 8,
+    paddingVertical: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: TEAL,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 4,
   },
   ctaBtnDisabled: {
-    backgroundColor: '#CBD5E1',
-    shadowOpacity: 0,
-    elevation: 0,
+    backgroundColor: '#9CA3AF',
+  },
+  contentCol: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   ctaText: {
-    color: '#FFF',
-    fontSize: 15,
+    color: '#FFFFFF',
+    fontSize: 14,
     fontWeight: '800',
-    letterSpacing: 0.3,
+    letterSpacing: 0.1,
+  },
+  ctaSubText: {
+    color: '#D1FAF5',
+    fontSize: 10,
+    fontWeight: '600',
+    marginTop: 1,
   },
 });

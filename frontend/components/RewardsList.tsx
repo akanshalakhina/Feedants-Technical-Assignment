@@ -7,10 +7,10 @@ interface Props {
 }
 
 const ICONS: Record<string, string> = {
-  gold:   '🏆',
+  gold: '🏆',
   silver: '🥈',
   bronze: '🥉',
-  star:   '⭐',
+  star: '⭐',
 };
 
 export function RewardsList({ rewards }: Props) {
@@ -22,31 +22,76 @@ export function RewardsList({ rewards }: Props) {
         <Text style={styles.title}>Rewards</Text>
         <Text style={styles.sub}>(All Positions)</Text>
       </View>
-      {rewards.map((r) => (
-        <View key={r.position} style={styles.row}>
-          <Text style={styles.icon}>{ICONS[r.icon] ?? '⭐'}</Text>
-          <Text style={styles.label}>{r.label}</Text>
-          <Text style={styles.amount}>₹ {r.amount.toLocaleString('en-IN')}</Text>
-        </View>
-      ))}
+      <View style={styles.card}>
+        {rewards.map((r, i) => (
+          <View
+            key={r.position}
+            style={[styles.row, i < rewards.length - 1 && styles.borderBottom]}
+          >
+            <Text style={styles.icon}>{ICONS[r.icon] ?? '⭐'}</Text>
+            <Text style={styles.label}>{r.label}</Text>
+            <Text style={styles.amount}>₹ {r.amount.toLocaleString('en-IN')}</Text>
+          </View>
+        ))}
+      </View>
     </View>
   );
 }
 
+const TEAL = '#00796B';
+
 const styles = StyleSheet.create({
-  section: { marginHorizontal: 12, marginVertical: 8 },
-  header:  { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 10 },
-  title:   { fontSize: 16, fontWeight: '800', color: '#1A1A1A' },
-  sub:     { fontSize: 13, color: '#888' },
+  section: {
+    marginHorizontal: 12,
+    marginVertical: 4,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 6,
+  },
+  title: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#111827',
+  },
+  sub: {
+    fontSize: 12,
+    color: '#6B7280',
+    fontWeight: '500',
+  },
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#ECEEF0',
+    paddingHorizontal: 12,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 11,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    paddingVertical: 9,
     gap: 10,
   },
-  icon:   { fontSize: 18, width: 26, textAlign: 'center' },
-  label:  { flex: 1, fontSize: 13, color: '#333333', fontWeight: '500' },
-  amount: { fontSize: 14, fontWeight: '800', color: '#16A093' },
+  borderBottom: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  icon: {
+    fontSize: 15,
+    width: 22,
+    textAlign: 'center',
+  },
+  label: {
+    flex: 1,
+    fontSize: 12,
+    color: '#111827',
+    fontWeight: '600',
+  },
+  amount: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: TEAL,
+  },
 });

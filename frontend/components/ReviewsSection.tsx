@@ -56,7 +56,7 @@ export function ReviewsSection({ competitionId, isLoggedIn, onLoginPrompt }: Pro
   const handleReviewAdded = (newReview: ReviewItem) => {
     setReviews((prev) => [newReview, ...prev]);
     setTotalReviews((prev) => prev + 1);
-    fetchReviews(); // Recalculate average cleanly from backend
+    fetchReviews();
   };
 
   const renderStars = (rating: number) => {
@@ -72,7 +72,7 @@ export function ReviewsSection({ competitionId, isLoggedIn, onLoginPrompt }: Pro
         activeOpacity={0.8}
       >
         <View style={styles.headerLeft}>
-          <Text style={styles.hearTitle}>💬 Hear From Our Users</Text>
+          <Text style={styles.hearTitle}>💬  Hear From Our Users</Text>
           <Text style={styles.hearSub}>
             {totalReviews > 0
               ? `${averageRating} ★  •  ${totalReviews} participant review${totalReviews > 1 ? 's' : ''}`
@@ -106,7 +106,7 @@ export function ReviewsSection({ competitionId, isLoggedIn, onLoginPrompt }: Pro
 
           {loading && (
             <View style={styles.centerBox}>
-              <ActivityIndicator color="#16A093" size="small" />
+              <ActivityIndicator color="#00796B" size="small" />
               <Text style={styles.loadingText}>Loading reviews...</Text>
             </View>
           )}
@@ -163,63 +163,64 @@ export function ReviewsSection({ competitionId, isLoggedIn, onLoginPrompt }: Pro
   );
 }
 
-const TEAL = '#16A093';
+const TEAL = '#00796B';
 
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 12,
-    marginVertical: 6,
+    marginVertical: 4,
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#EBEBEB',
-    padding: 14,
+    borderColor: '#ECEEF0',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
   },
   headerLeft: {
     flex: 1,
   },
   hearTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#1A1A1A',
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#111827',
   },
   hearSub: {
-    fontSize: 12,
-    color: '#888',
+    fontSize: 10,
+    color: '#6B7280',
     marginTop: 2,
   },
   hearArrow: {
-    fontSize: 20,
-    color: '#999',
+    fontSize: 18,
+    color: '#6B7280',
     fontWeight: 'bold',
     marginLeft: 8,
   },
   hearArrowExpanded: {
-    fontSize: 14,
+    fontSize: 12,
     color: TEAL,
   },
   body: {
-    backgroundColor: '#FFF',
-    borderBottomLeftRadius: 12,
-    borderBottomRightRadius: 12,
+    backgroundColor: '#FFFFFF',
+    borderBottomLeftRadius: 14,
+    borderBottomRightRadius: 14,
     borderWidth: 1,
     borderTopWidth: 0,
-    borderColor: '#EBEBEB',
-    padding: 14,
+    borderColor: '#ECEEF0',
+    padding: 12,
   },
   summaryBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 12,
+    paddingBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-    marginBottom: 12,
+    borderBottomColor: '#F3F4F6',
+    marginBottom: 10,
   },
   ratingOverview: {
     flexDirection: 'row',
@@ -227,108 +228,108 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   bigRating: {
-    fontSize: 26,
+    fontSize: 22,
     fontWeight: '800',
-    color: '#1A1A1A',
+    color: '#111827',
   },
   starDisplay: {
-    fontSize: 13,
+    fontSize: 11,
     color: '#F5A623',
   },
   reviewCountText: {
-    fontSize: 11,
-    color: '#888',
+    fontSize: 10,
+    color: '#6B7280',
   },
   addReviewBtn: {
-    backgroundColor: '#F0F9F8',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    backgroundColor: '#E6F7F5',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: TEAL,
+    borderColor: '#B2DFDB',
   },
   addReviewBtnText: {
-    fontSize: 12,
+    fontSize: 11,
     color: TEAL,
     fontWeight: '700',
   },
   centerBox: {
-    paddingVertical: 20,
+    paddingVertical: 16,
     alignItems: 'center',
   },
   loadingText: {
-    fontSize: 12,
-    color: '#888',
-    marginTop: 6,
+    fontSize: 11,
+    color: '#6B7280',
+    marginTop: 4,
   },
   errorText: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#E53E3E',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   retryBtn: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
     borderRadius: 4,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#F3F4F6',
   },
   retryBtnText: {
-    fontSize: 12,
-    color: '#333',
+    fontSize: 11,
+    color: '#111827',
   },
   emptyBox: {
-    paddingVertical: 20,
+    paddingVertical: 16,
     alignItems: 'center',
   },
   emptyText: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600',
-    color: '#555',
+    color: '#374151',
   },
   emptySubText: {
-    fontSize: 12,
-    color: '#999',
+    fontSize: 11,
+    color: '#6B7280',
     marginTop: 2,
   },
   reviewList: {
-    gap: 12,
+    gap: 10,
   },
   reviewItem: {
-    paddingBottom: 10,
+    paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#F8F8F8',
+    borderBottomColor: '#F9FAFB',
   },
   reviewerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   avatar: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#EEE',
-    marginRight: 8,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#F3F4F6',
+    marginRight: 6,
   },
   reviewerInfo: {
     flex: 1,
   },
   userName: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: '#111827',
   },
   itemStars: {
-    fontSize: 11,
+    fontSize: 10,
     color: '#F5A623',
   },
   dateText: {
-    fontSize: 11,
-    color: '#AAA',
+    fontSize: 10,
+    color: '#9CA3AF',
   },
   comment: {
-    fontSize: 12,
-    color: '#444',
-    lineHeight: 18,
+    fontSize: 11,
+    color: '#374151',
+    lineHeight: 16,
   },
 });

@@ -7,21 +7,24 @@ interface Props {
   onVideoPress?: (winner: PreviousWinner) => void;
 }
 
-const RANK_COLOR: Record<string, string> = {
-  '1st': '#D4A72E',
-  '2nd': '#8E9BA8',
-  '3rd': '#B56A2E',
-};
-
 export function PreviousWinners({ winners, onVideoPress }: Props) {
   if (!winners.length) return null;
 
   return (
     <View style={styles.section}>
       <Text style={styles.title}>Previous Winners</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scroll}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scroll}
+      >
         {winners.map((winner, i) => (
-          <TouchableOpacity key={i} style={styles.card} onPress={() => onVideoPress?.(winner)} activeOpacity={0.8}>
+          <TouchableOpacity
+            key={i}
+            style={styles.card}
+            onPress={() => onVideoPress?.(winner)}
+            activeOpacity={0.8}
+          >
             <View style={styles.thumbWrap}>
               <Image source={{ uri: winner.videoThumbnailUrl }} style={styles.thumb} />
               <View style={styles.overlay}>
@@ -30,10 +33,14 @@ export function PreviousWinners({ winners, onVideoPress }: Props) {
                 </View>
               </View>
             </View>
-            <Text style={styles.name} numberOfLines={1}>{winner.name}</Text>
-            <Text style={[styles.rank, { color: RANK_COLOR[winner.rank] ?? '#888' }]}>
-              {winner.rank} Winner
-            </Text>
+            <View style={styles.infoCol}>
+              <Text style={styles.name} numberOfLines={1}>
+                {winner.name}
+              </Text>
+              <Text style={styles.rank}>
+                {winner.rank} Winner
+              </Text>
+            </View>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -41,24 +48,80 @@ export function PreviousWinners({ winners, onVideoPress }: Props) {
   );
 }
 
+const TEAL = '#00796B';
+
 const styles = StyleSheet.create({
-  section:  { marginVertical: 8 },
-  title:    { fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginHorizontal: 12, marginBottom: 10 },
-  scroll:   { paddingHorizontal: 12, gap: 12 },
-  card:     { width: 100 },
-  thumbWrap:{ width: 100, height: 100, borderRadius: 10, overflow: 'hidden', backgroundColor: '#EEE' },
-  thumb:    { width: '100%', height: '100%' },
-  overlay:  {
-    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.28)',
-    alignItems: 'center', justifyContent: 'center',
+  section: {
+    marginVertical: 4,
+  },
+  title: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#111827',
+    marginHorizontal: 12,
+    marginBottom: 6,
+  },
+  scroll: {
+    paddingHorizontal: 12,
+    gap: 8,
+  },
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#ECEEF0',
+    padding: 4,
+    paddingRight: 10,
+    gap: 8,
+  },
+  thumbWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: '#F3F4F6',
+  },
+  thumb: {
+    width: '100%',
+    height: '100%',
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.22)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   playBtn: {
-    width: 34, height: 34, borderRadius: 17,
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    alignItems: 'center', justifyContent: 'center',
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: 'rgba(255,255,255,0.92)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  playIcon: { fontSize: 13, color: '#333', marginLeft: 2 },
-  name:     { fontSize: 12, fontWeight: '700', color: '#1A1A1A', marginTop: 6 },
-  rank:     { fontSize: 11, marginTop: 1 },
+  playIcon: {
+    fontSize: 9,
+    color: TEAL,
+    marginLeft: 2,
+  },
+  infoCol: {
+    justifyContent: 'center',
+  },
+  name: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#111827',
+  },
+  rank: {
+    fontSize: 11,
+    color: TEAL,
+    fontWeight: '600',
+    marginTop: 2,
+  },
 });

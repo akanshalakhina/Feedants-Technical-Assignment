@@ -22,8 +22,8 @@ export function CountdownTimer({ targetDate, label = 'Registration closes in' }:
         return;
       }
       setTimeLeft({
-        days:    Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours:   Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
         minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
         seconds: Math.floor((diff % (1000 * 60)) / 1000),
       });
@@ -44,7 +44,7 @@ export function CountdownTimer({ targetDate, label = 'Registration closes in' }:
   return (
     <View style={styles.container}>
       <View style={styles.leftGroup}>
-        <Text style={styles.sandGlass}>⏳</Text>
+        <Text style={styles.icon}>⌛</Text>
         <Text style={styles.label}>{label}</Text>
       </View>
       <View style={styles.timerRow}>
@@ -53,25 +53,25 @@ export function CountdownTimer({ targetDate, label = 'Registration closes in' }:
         </Text>
       </View>
       <View style={styles.hurryBadge}>
-        <Text style={styles.hurryIcon}>🔥</Text>
+        <Text style={styles.icon}>⏱️</Text>
         <Text style={styles.hurryText}>Hurry up!</Text>
       </View>
     </View>
   );
 }
 
-const TEAL = '#16A093';
+const TEAL = '#00796B';
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F0F9F8',
-    borderRadius: 8,
+    backgroundColor: '#E6F7F5',
+    borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 10,
     marginHorizontal: 12,
-    marginVertical: 6,
+    marginVertical: 4,
     borderWidth: 1,
-    borderColor: '#D2ECE9',
+    borderColor: '#C5ECE6',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -81,30 +81,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
   },
-  sandGlass: {
+  icon: {
     fontSize: 12,
   },
   label: {
     fontSize: 11,
-    color: '#444444',
-    fontWeight: '500',
+    color: '#111827',
+    fontWeight: '600',
   },
   timerRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   timerText: {
-    fontSize: 12,
-    fontWeight: '700',
+    fontSize: 13,
+    fontWeight: '800',
     color: TEAL,
+    letterSpacing: -0.2,
   },
   hurryBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
-  },
-  hurryIcon: {
-    fontSize: 11,
   },
   hurryText: {
     fontSize: 11,
@@ -112,9 +110,10 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   expiredText: {
-    fontSize: 13,
-    color: '#888888',
+    fontSize: 12,
+    color: '#6B7280',
     textAlign: 'center',
-    padding: 4,
+    padding: 2,
+    fontWeight: '500',
   },
 });

@@ -38,39 +38,67 @@ export function JudgeCard({ judge, onVideoPress }: Props) {
   );
 }
 
+const TEAL = '#00796B';
+
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF',
+    backgroundColor: '#FFFFFF',
     marginHorizontal: 12,
-    marginVertical: 6,
-    borderRadius: 12,
+    marginVertical: 4,
+    borderRadius: 16,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#EBEBEB',
+    borderColor: '#ECEEF0',
     gap: 12,
   },
   avatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: '#EEE',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#F3F4F6',
   },
-  info: { flex: 1 },
-  judgeLabel: { fontSize: 11, color: '#999', marginBottom: 2 },
-  name:        { fontSize: 15, fontWeight: '800', color: '#1A1A1A' },
-  detail:      { fontSize: 12, color: '#666', marginTop: 1 },
-  videoBtn:    { alignItems: 'center', gap: 6 },
-  playCircle:  {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    borderWidth: 1.5,
-    borderColor: '#16A093',
+  info: {
+    flex: 1,
+  },
+  judgeLabel: {
+    fontSize: 11,
+    color: '#9CA3AF',
+    marginBottom: 2,
+    fontWeight: '500',
+  },
+  name: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#111827',
+  },
+  detail: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginTop: 1,
+  },
+  videoBtn: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  playIcon:  { color: '#16A093', fontSize: 15, marginLeft: 2 },
-  videoLabel:{ fontSize: 11, color: '#666' },
+  playCircle: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#E6F7F5',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  playIcon: {
+    color: TEAL,
+    fontSize: 13,
+    marginLeft: 2,
+  },
+  videoLabel: {
+    fontSize: 11,
+    color: '#6B7280',
+    marginTop: 4,
+    fontWeight: '500',
+  },
 });

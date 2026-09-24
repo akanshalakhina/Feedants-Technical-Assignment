@@ -25,38 +25,58 @@ export function PaymentAndReferral({ referralCode, onPrizeInfoPress }: Props) {
       {/* Disclaimer */}
       <View style={styles.disclaimer}>
         <Text style={styles.disclaimerText}>
-          ℹ️ <Text style={styles.bold}>Disclaimer:</Text> Only contributions from paid participants
-          will be considered for judging.
+          <Text style={styles.infoIcon}>ⓘ </Text>
+          <Text style={styles.boldTeal}>Disclaimer: </Text>
+          Only contributions from paid participants will be considered for judging.
         </Text>
       </View>
 
-      {/* Prize money information video card */}
-      <TouchableOpacity
-        style={styles.prizeInfoCard}
-        onPress={onPrizeInfoPress}
-        activeOpacity={0.8}
-      >
-        <View style={styles.playCircle}>
-          <Text style={styles.playIcon}>▶</Text>
-        </View>
-        <View style={styles.prizeInfoTextCol}>
-          <Text style={styles.prizeInfoTitle}>How will you receive prize money?</Text>
-          <Text style={styles.prizeInfoSub}>Watch video to know more</Text>
-        </View>
-      </TouchableOpacity>
+      {/* Prize Money FAQ & Payment Security Card (Two Columns) */}
+      <View style={styles.twoColCard}>
+        {/* Left column: Video FAQ */}
+        <TouchableOpacity
+          style={styles.colLeft}
+          onPress={onPrizeInfoPress}
+          activeOpacity={0.8}
+        >
+          <View style={styles.playBox}>
+            <Text style={styles.playIcon}>▶</Text>
+          </View>
+          <View style={styles.faqInfo}>
+            <Text style={styles.faqTitle}>How will you receive prize money?</Text>
+            <Text style={styles.faqSub}>Watch video to know more</Text>
+          </View>
+        </TouchableOpacity>
 
-      {/* Trust badges */}
-      <View style={styles.paymentRow}>
-        <Text style={styles.paymentItem}>🛡 Refund policy</Text>
-        <Text style={styles.paymentItem}>🛡 Secure payments powered by Razorpay</Text>
+        {/* Vertical hairline divider */}
+        <View style={styles.vertDivider} />
+
+        {/* Right column: Trust & Razorpay */}
+        <View style={styles.colRight}>
+          <View style={styles.trustItem}>
+            <Text style={styles.shieldIcon}>🛡️</Text>
+            <Text style={styles.trustText}>Refund policy</Text>
+          </View>
+          <View style={styles.trustItem}>
+            <Text style={styles.shieldIcon}>🛡️</Text>
+            <Text style={styles.trustSubText}>
+              Secure payments powered by{' '}
+              <Text style={styles.razorpayBrand}>Razorpay</Text>
+            </Text>
+          </View>
+        </View>
       </View>
 
       {/* Refer & Earn Card */}
       <View style={styles.referCard}>
-        <Text style={styles.referTitle}>📣 Refer &amp; Earn more discount</Text>
-        <View style={styles.referRow}>
-          <View style={styles.referLinkBox}>
-            <Text style={styles.referLink} numberOfLines={1}>
+        <View style={styles.referTopRow}>
+          <Text style={styles.megaphoneIcon}>📢</Text>
+          <Text style={styles.referTitle}>Refer &amp; Earn more discount</Text>
+        </View>
+
+        <View style={styles.linkRow}>
+          <View style={styles.linkBox}>
+            <Text style={styles.linkText} numberOfLines={1}>
               {referralLink}
             </Text>
           </View>
@@ -64,22 +84,25 @@ export function PaymentAndReferral({ referralCode, onPrizeInfoPress }: Props) {
             <Text style={styles.copyBtnText}>Copy Link</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.referBottom}>
+
+        <View style={styles.referActionRow}>
           <TouchableOpacity
-            style={styles.referNowBtn}
-            onPress={() => Alert.alert('Refer Now', `Share this link with your friends:\n${referralLink}`)}
-            activeOpacity={0.8}
+            style={styles.referBtn}
+            onPress={() => Alert.alert('Refer Now', `Share this referral link with your peers:\n${referralLink}`)}
+            activeOpacity={0.85}
           >
-            <Text style={styles.referNowText}>Refer Now</Text>
+            <Text style={styles.referBtnText}>Refer Now</Text>
           </TouchableOpacity>
-          <Text style={styles.earnText}>You earn ₹10 for every signup</Text>
+          <Text style={styles.earnLabel}>
+            You earn <Text style={styles.earnHighlight}>₹10</Text> for every signup
+          </Text>
         </View>
       </View>
     </View>
   );
 }
 
-const TEAL = '#16A093';
+const TEAL = '#00796B';
 
 const styles = StyleSheet.create({
   container: {
@@ -87,136 +110,180 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   disclaimer: {
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#E6F7F5',
     borderRadius: 8,
-    padding: 10,
-    marginBottom: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    marginBottom: 8,
     borderWidth: 1,
-    borderColor: '#EEEEEE',
+    borderColor: '#C5ECE6',
   },
   disclaimerText: {
     fontSize: 11,
-    color: '#666666',
+    color: '#111827',
     lineHeight: 16,
   },
-  bold: {
-    fontWeight: '700',
-    color: '#333333',
+  infoIcon: {
+    color: TEAL,
+    fontWeight: '800',
   },
-  prizeInfoCard: {
+  boldTeal: {
+    fontWeight: '800',
+    color: TEAL,
+  },
+  twoColCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 12,
-    padding: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#EBEBEB',
+    borderColor: '#ECEEF0',
+    padding: 10,
     marginBottom: 8,
-    gap: 12,
   },
-  playCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: '#E8F7F5',
-    borderWidth: 1.5,
-    borderColor: TEAL,
+  colLeft: {
+    flex: 1.1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingRight: 6,
+  },
+  playBox: {
+    width: 34,
+    height: 34,
+    borderRadius: 6,
+    backgroundColor: '#E0F2F1',
     alignItems: 'center',
     justifyContent: 'center',
   },
   playIcon: {
     color: TEAL,
-    fontSize: 14,
-    marginLeft: 2,
+    fontSize: 12,
+    marginLeft: 1,
   },
-  prizeInfoTextCol: {
+  faqInfo: {
     flex: 1,
   },
-  prizeInfoTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#1A1A1A',
-  },
-  prizeInfoSub: {
+  faqTitle: {
     fontSize: 11,
-    color: '#888888',
+    fontWeight: '800',
+    color: '#111827',
+    lineHeight: 14,
+  },
+  faqSub: {
+    fontSize: 10,
+    color: '#6B7280',
     marginTop: 2,
   },
-  paymentRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 4,
-    paddingVertical: 6,
-    marginBottom: 8,
+  vertDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: '#ECEEF0',
+    marginHorizontal: 6,
   },
-  paymentItem: {
-    fontSize: 11,
-    color: '#888888',
+  colRight: {
+    flex: 1,
+    gap: 4,
   },
-  referCard: {
-    backgroundColor: '#FFF',
-    borderRadius: 12,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: '#EBEBEB',
-    marginBottom: 8,
-  },
-  referTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    marginBottom: 10,
-  },
-  referRow: {
+  trustItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 10,
+    gap: 4,
   },
-  referLinkBox: {
+  shieldIcon: {
+    fontSize: 11,
+  },
+  trustText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#111827',
+  },
+  trustSubText: {
+    fontSize: 10,
+    color: '#6B7280',
+    lineHeight: 14,
+  },
+  razorpayBrand: {
+    fontWeight: '900',
+    color: '#0C2340',
+    fontStyle: 'italic',
+  },
+  referCard: {
+    backgroundColor: '#E6F7F5',
+    borderRadius: 14,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#C5ECE6',
+    marginBottom: 6,
+  },
+  referTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 8,
+  },
+  megaphoneIcon: {
+    fontSize: 14,
+  },
+  referTitle: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#111827',
+  },
+  linkRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 8,
+  },
+  linkBox: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#FFFFFF',
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    borderColor: '#C5ECE6',
+    paddingHorizontal: 8,
+    paddingVertical: 6,
   },
-  referLink: {
-    fontSize: 11,
-    color: '#64748B',
+  linkText: {
+    fontSize: 10,
+    color: '#6B7280',
   },
   copyBtn: {
-    backgroundColor: '#F1F5F9',
+    backgroundColor: '#FFFFFF',
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#CBD5E1',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    borderColor: '#C5ECE6',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
   },
   copyBtnText: {
-    fontSize: 11,
-    color: '#334155',
+    fontSize: 10,
+    color: '#374151',
     fontWeight: '600',
   },
-  referBottom: {
+  referActionRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
   },
-  referNowBtn: {
-    backgroundColor: TEAL,
+  referBtn: {
+    backgroundColor: '#006064',
     borderRadius: 6,
-    paddingHorizontal: 16,
-    paddingVertical: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 5,
   },
-  referNowText: {
-    fontSize: 12,
-    color: '#FFF',
+  referBtnText: {
+    fontSize: 11,
+    color: '#FFFFFF',
     fontWeight: '700',
   },
-  earnText: {
+  earnLabel: {
     fontSize: 11,
-    color: '#64748B',
+    color: '#4B5563',
+  },
+  earnHighlight: {
+    color: TEAL,
+    fontWeight: '700',
   },
 });

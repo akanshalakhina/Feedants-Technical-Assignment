@@ -4,190 +4,89 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 export type Language = 'en' | 'hi';
 
 interface Props {
-  title: string;
-  tags: string[];
-  isRegistered: boolean;
   language: Language;
   onLanguageChange: (lang: Language) => void;
   onBack: () => void;
 }
 
-export function CompetitionHeader({
-  title,
-  tags,
-  isRegistered,
-  language,
-  onLanguageChange,
-  onBack,
-}: Props) {
+export function CompetitionHeader({ language, onLanguageChange, onBack }: Props) {
   return (
-    <View style={styles.container}>
-      {/* Top action row */}
-      <View style={styles.topRow}>
-        <TouchableOpacity onPress={onBack} style={styles.backBtn} activeOpacity={0.7}>
-          <Text style={styles.backArrow}>←</Text>
-          <Text style={styles.backText}>Go back</Text>
+    <View style={styles.headerContainer}>
+      <TouchableOpacity onPress={onBack} style={styles.backBtn} activeOpacity={0.7}>
+        <Text style={styles.backArrow}>←</Text>
+        <Text style={styles.backText}>Go back</Text>
+      </TouchableOpacity>
+
+      {/* Language Toggle Pill matching Page 3 reference */}
+      <View style={styles.langPill}>
+        <TouchableOpacity
+          style={[styles.langSide, language === 'en' && styles.langSideActive]}
+          onPress={() => onLanguageChange('en')}
+          activeOpacity={0.8}
+        >
+          <Text style={[styles.langText, language === 'en' && styles.langTextActive]}>ENG</Text>
         </TouchableOpacity>
-
-        {/* Language selector toggle */}
-        <View style={styles.langToggle}>
-          {(['en', 'hi'] as Language[]).map((lang) => {
-            const isActive = language === lang;
-            return (
-              <TouchableOpacity
-                key={lang}
-                style={[styles.langBtn, isActive && styles.langBtnActive]}
-                onPress={() => onLanguageChange(lang)}
-                activeOpacity={0.8}
-              >
-                <Text style={[styles.langBtnText, isActive && styles.langBtnTextActive]}>
-                  {lang === 'en' ? 'ENG' : 'हिंदी'}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      </View>
-
-      {/* Title & Registered Status badge */}
-      <View style={styles.titleRow}>
-        <Text style={styles.title} numberOfLines={2}>
-          {title}
-        </Text>
-        {isRegistered && (
-          <View style={styles.registeredBadge}>
-            <Text style={styles.registeredBadgeText}>✓ Registered</Text>
-          </View>
-        )}
-      </View>
-
-      {/* Tags row */}
-      <View style={styles.tagsRow}>
-        {tags.map((tag) => (
-          <View key={tag} style={styles.tagBadge}>
-            <Text style={styles.tagText}>{tag}</Text>
-          </View>
-        ))}
-        <View style={styles.certRow}>
-          <Text style={styles.certIcon}>🏆</Text>
-          <Text style={styles.certText}>Winners get certificate</Text>
-        </View>
+        <TouchableOpacity
+          style={[styles.langSide, language === 'hi' && styles.langSideActive]}
+          onPress={() => onLanguageChange('hi')}
+          activeOpacity={0.8}
+        >
+          <Text style={[styles.langText, language === 'hi' && styles.langTextActive]}>हिंदी</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
 
-const TEAL = '#16A093';
+const TEAL = '#006064';
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FFF',
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 4,
-  },
-  topRow: {
+  headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 8,
+    backgroundColor: '#F8F9FA',
   },
   backBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 6,
   },
   backArrow: {
-    fontSize: 16,
-    color: '#1A1A1A',
-    fontWeight: 'bold',
+    fontSize: 18,
+    color: '#111827',
+    fontWeight: '700',
   },
   backText: {
-    fontSize: 13,
-    color: '#1A1A1A',
-    fontWeight: '600',
+    fontSize: 15,
+    color: '#111827',
+    fontWeight: '700',
   },
-  langToggle: {
+  langPill: {
     flexDirection: 'row',
-    backgroundColor: '#F1F5F9',
-    borderRadius: 16,
+    alignItems: 'center',
+    backgroundColor: '#E5E7EB',
+    borderRadius: 20,
     padding: 2,
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
   },
-  langBtn: {
-    paddingVertical: 3,
+  langSide: {
+    paddingVertical: 4,
     paddingHorizontal: 10,
-    borderRadius: 14,
+    borderRadius: 16,
   },
-  langBtnActive: {
+  langSideActive: {
     backgroundColor: TEAL,
   },
-  langBtnText: {
+  langText: {
     fontSize: 11,
-    color: '#64748B',
     fontWeight: '600',
+    color: '#4B5563',
   },
-  langBtnTextActive: {
-    color: '#FFF',
+  langTextActive: {
+    color: '#FFFFFF',
     fontWeight: '700',
-  },
-  titleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-    gap: 8,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: '#1A1A1A',
-    flex: 1,
-  },
-  registeredBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#E8F7F5',
-    borderWidth: 1,
-    borderColor: '#A4DFD8',
-    borderRadius: 20,
-    paddingVertical: 3,
-    paddingHorizontal: 10,
-  },
-  registeredBadgeText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: TEAL,
-  },
-  tagsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  tagBadge: {
-    backgroundColor: '#F1F5F9',
-    borderRadius: 6,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-  },
-  tagText: {
-    fontSize: 11,
-    color: '#64748B',
-    fontWeight: '500',
-  },
-  certRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  certIcon: {
-    fontSize: 12,
-  },
-  certText: {
-    fontSize: 11,
-    color: '#64748B',
-    fontWeight: '500',
   },
 });

@@ -51,11 +51,11 @@ function computeCTA(
   if (isRegistered) {
     if (now >= subStart && now <= subEnd) {
       return hasSubmitted
-        ? { label: '✓ Submission Uploaded', disabled: true, action: null }
-        : { label: 'Upload Submission', disabled: false, action: 'upload' };
+        ? { label: '✓ Submission Uploaded', subLabel: 'Under Review', disabled: true, action: null }
+        : { label: 'Upload Submission', subLabel: 'Registered', disabled: false, action: 'upload' };
     }
     if (now < subStart) {
-      return { label: '✓ Registered — Submission opens soon', disabled: true, action: null };
+      return { label: '✓ Registered', subLabel: 'Submission opens soon', disabled: true, action: null };
     }
     return { label: 'Submission Closed', disabled: true, action: null };
   }
@@ -63,7 +63,7 @@ function computeCTA(
   if (!hasSpots) return { label: 'Fully Booked', disabled: true, action: null };
   if (now > regClose) return { label: 'Registration Closed', disabled: true, action: null };
 
-  return { label: `Register Now  ₹${competition.entryFee}`, disabled: false, action: 'register' };
+  return { label: 'Register Now', subLabel: `₹ ${competition.entryFee}`, disabled: false, action: 'register' };
 }
 
 // ─── Competition Details Screen ───────────────────────────────────────────────
@@ -234,26 +234,22 @@ export default function CompetitionDetailScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Modular Header */}
+        {/* Header (Back button + Language selector) */}
         <CompetitionHeader
-          title={competition.title}
-          tags={competition.tags}
-          isRegistered={isRegistered}
           language={language}
           onLanguageChange={setLanguage}
           onBack={() => router.back()}
         />
 
-        {/* Modular Stats (Prize pool, Fee, Spots progress, Concurrency simulation) */}
+        {/* Top Competition Card (Title, Status Badge, Tags, Financials & Spot Progress) */}
         <CompetitionStats
+          title={competition.title}
+          tags={competition.tags}
+          isRegistered={isRegistered}
           prizePool={competition.prizePool}
           entryFee={competition.entryFee}
           totalSpots={competition.totalSpots}
           bookedSpots={competition.bookedSpots}
-          simulating={simulating}
-          simulationToast={simulationToast}
-          onSimulateBooking={handleSimulateBooking}
-          onResetSpots={handleResetSpots}
         />
 
         {/* Judge Card with Intro Video action */}
@@ -387,10 +383,10 @@ const TEAL = '#16A093';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F8F9FA',
   },
   scrollContent: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F8F9FA',
     paddingBottom: 20,
   },
   center: {
@@ -398,7 +394,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 24,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F8F9FA',
   },
   loadingText: {
     marginTop: 14,
@@ -422,19 +418,19 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   adBox: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#FAFAFA',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: '#D1D5DB',
     borderStyle: 'dashed',
-    paddingVertical: 14,
+    paddingVertical: 10,
     alignItems: 'center',
     marginHorizontal: 12,
-    marginVertical: 10,
+    marginVertical: 6,
   },
   adText: {
-    fontSize: 12,
-    color: '#94A3B8',
+    fontSize: 11,
+    color: '#9CA3AF',
     fontWeight: '600',
   },
 

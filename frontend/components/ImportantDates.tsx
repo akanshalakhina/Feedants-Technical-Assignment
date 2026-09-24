@@ -2,21 +2,20 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 interface Props {
-  registerBefore:   string;
+  registerBefore: string;
   submissionStarts: string;
-  submissionEnds:   string;
-  resultDate:       string;
+  submissionEnds: string;
+  resultDate: string;
 }
 
 function formatDate(iso: string) {
   const d = new Date(iso);
-  const day   = d.getDate();
+  const day = d.getDate();
   const month = d.toLocaleString('en-IN', { month: 'short' });
-  const year  = d.getFullYear().toString().slice(-2);
-  const time  = d.toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }).toUpperCase();
+  const year = d.getFullYear().toString().slice(-2);
+  const time = d.toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }).toUpperCase();
   return { date: `${day} ${month} ${year}`, time };
 }
-
 
 export function ImportantDates({ registerBefore, submissionStarts, submissionEnds, resultDate }: Props) {
   const rb = formatDate(registerBefore);
@@ -36,7 +35,7 @@ export function ImportantDates({ registerBefore, submissionStarts, submissionEnd
             <Text style={styles.time}>{rb.time}</Text>
           </View>
           <View style={[styles.quadrant, styles.borderBottom]}>
-            <Text style={styles.icon}>🚀</Text>
+            <Text style={styles.icon}>✈️</Text>
             <Text style={styles.label}>Submission Starts</Text>
             <Text style={styles.date}>{ss.date}</Text>
             <Text style={styles.time}>{ss.time}</Text>
@@ -44,7 +43,7 @@ export function ImportantDates({ registerBefore, submissionStarts, submissionEnd
         </View>
         <View style={styles.row}>
           <View style={[styles.quadrant, styles.borderRight]}>
-            <Text style={styles.icon}>📤</Text>
+            <Text style={styles.icon}>⬆️</Text>
             <Text style={styles.label}>Submission Ends</Text>
             <Text style={styles.date}>{se.date}</Text>
             <Text style={styles.time}>{se.time}</Text>
@@ -62,13 +61,21 @@ export function ImportantDates({ registerBefore, submissionStarts, submissionEnd
 }
 
 const styles = StyleSheet.create({
-  section: { marginHorizontal: 12, marginVertical: 6 },
-  title:   { fontSize: 15, fontWeight: '700', color: '#1A1A1A', marginBottom: 8 },
+  section: {
+    marginHorizontal: 12,
+    marginVertical: 4,
+  },
+  title: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#111827',
+    marginBottom: 6,
+  },
   card: {
-    backgroundColor: '#FFF',
-    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#EBEBEB',
+    borderColor: '#ECEEF0',
     overflow: 'hidden',
   },
   row: {
@@ -76,18 +83,36 @@ const styles = StyleSheet.create({
   },
   quadrant: {
     flex: 1,
-    padding: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
   },
   borderRight: {
     borderRightWidth: 1,
-    borderRightColor: '#F0F0F0',
+    borderRightColor: '#F3F4F6',
   },
   borderBottom: {
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    borderBottomColor: '#F3F4F6',
   },
-  icon:  { fontSize: 16, marginBottom: 4 },
-  label: { fontSize: 11, color: '#888888', marginBottom: 2 },
-  date:  { fontSize: 13, fontWeight: '700', color: '#1A1A1A', marginBottom: 2 },
-  time:  { fontSize: 11, color: '#666666' },
+  icon: {
+    fontSize: 15,
+    marginBottom: 4,
+  },
+  label: {
+    fontSize: 11,
+    color: '#6B7280',
+    marginBottom: 2,
+    fontWeight: '500',
+  },
+  date: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#111827',
+    marginBottom: 1,
+  },
+  time: {
+    fontSize: 11,
+    color: '#6B7280',
+    fontWeight: '500',
+  },
 });
